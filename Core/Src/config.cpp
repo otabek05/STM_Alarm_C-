@@ -15,7 +15,7 @@ void Config::init() {
     setSubnet({255, 255, 255, 0});
     setDNS({8, 8, 8, 8}); // Google's DNS for example
     setKeepAliveInterval(60);
-    setDHCPEnabled(false);
+    setDHCPEnabled(true);
     setIntervalTime(1000); // Example interval time
 
     setUsername("user");

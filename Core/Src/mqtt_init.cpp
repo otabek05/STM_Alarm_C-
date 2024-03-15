@@ -92,7 +92,7 @@ bool MQTTConnection::publish(  char* message, Config config) {
 void MQTTConnection::subscribe(std::string topic) {
     // Subscribe to a topic
  char*	subTopic =  const_cast<char*>(topic.c_str());
-    if (MQTTSubscribe(&mqttClient,subTopic, QOS0, handleMessage) != SUCCESS) {
+    if (MQTTSubscribe(&mqttClient, "sub", QOS0, handleMessage) != SUCCESS) {
         Print("Subscribe failed!\n");
     } else {
         Print("Subscribed to topic successfully.\n");

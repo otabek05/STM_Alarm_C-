@@ -131,9 +131,11 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
  config.init();
- config.setDHCPEnabled(true);
+
  ethManager.initialize(&config);
+
  Print("Welcome to the New World");
+
  mqttClient.init(config);
 
 //  HAL_TIM_Base_Start_IT(&htim1);
@@ -168,8 +170,9 @@ int main(void)
 
 	mqttClient.mqttYield();
 
-    Print("Data has been published!!! \r\n");
+   // Print("Data has been published!!! \r\n");
 
+    mqttClient.publish("HelloMQTT", config);
     HAL_Delay(3000);
 
 

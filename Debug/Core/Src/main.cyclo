@@ -4,15 +4,15 @@ C:\ST\STM32CubeIDE_1.14.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.external
 ../Core/Inc/config.h:19:7:Config::Config(const Config&)	1
 ../Core/Inc/config.h:19:7:Config::~Config()	1
 ../Core/Src/main.cpp:103:5:int main()	1
-../Core/Src/main.cpp:187:6:void SystemClock_Config()	3
-../Core/Src/main.cpp:233:13:void MX_ADC1_Init()	7
-../Core/Src/main.cpp:326:13:void MX_ADC2_Init()	6
-../Core/Src/main.cpp:402:13:void MX_SPI2_Init()	2
-../Core/Src/main.cpp:440:13:void MX_USART1_UART_Init()	2
-../Core/Src/main.cpp:473:13:void MX_GPIO_Init()	1
-../Core/Src/main.cpp:566:6:void HAL_GPIO_EXTI_Callback(uint16_t)	1
-../Core/Src/main.cpp:572:6:void HAL_UART_RxCpltCallback(UART_HandleTypeDef*)	1
-../Core/Src/main.cpp:588:6:void Error_Handler()	1
-../Core/Src/main.cpp:597:1:void __static_initialization_and_destruction_0(int, int)	7
-../Core/Src/main.cpp:597:1:cpp)	1
-../Core/Src/main.cpp:597:1:cpp)	1
+../Core/Src/main.cpp:190:6:void SystemClock_Config()	3
+../Core/Src/main.cpp:236:13:void MX_ADC1_Init()	7
+../Core/Src/main.cpp:329:13:void MX_ADC2_Init()	6
+../Core/Src/main.cpp:405:13:void MX_SPI2_Init()	2
+../Core/Src/main.cpp:443:13:void MX_USART1_UART_Init()	2
+../Core/Src/main.cpp:476:13:void MX_GPIO_Init()	1
+../Core/Src/main.cpp:569:6:void HAL_GPIO_EXTI_Callback(uint16_t)	1
+../Core/Src/main.cpp:575:6:void HAL_UART_RxCpltCallback(UART_HandleTypeDef*)	1
+../Core/Src/main.cpp:591:6:void Error_Handler()	1
+../Core/Src/main.cpp:600:1:void __static_initialization_and_destruction_0(int, int)	7
+../Core/Src/main.cpp:600:1:cpp)	1
+../Core/Src/main.cpp:600:1:cpp)	1
