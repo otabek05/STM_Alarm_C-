@@ -1,5 +1,5 @@
 Core/Src/EthernetManager.o: ../Core/Src/EthernetManager.cpp \
- ../Core/Inc/EthernetManager.h ../Core/Inc/config.h \
+ ../Core/Inc/EthernetManager.h ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -30,10 +30,7 @@ Core/Src/EthernetManager.o: ../Core/Src/EthernetManager.cpp \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- ../Core/Lib/Ethernet/wizchip_conf.h \
- ../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/w5500.h \
- ../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/../../../Lib/Ethernet/wizchip_conf.h \
- ../Core/Inc/utils.h ../Core/Lib/MQTT/MQTTClient.h \
+ ../Core/Lib/MQTT/MQTTClient.h \
  ../Core/Lib/MQTT/../../Lib/MQTT/MQTTPacket/src/MQTTPacket.h \
  ../Core/Lib/MQTT/../../Lib/MQTT/MQTTPacket/src/../../../../Lib/MQTT/MQTTPacket/src/MQTTConnect.h \
  ../Core/Lib/MQTT/../../Lib/MQTT/MQTTPacket/src/../../../../Lib/MQTT/MQTTPacket/src/MQTTPublish.h \
@@ -43,15 +40,15 @@ Core/Src/EthernetManager.o: ../Core/Src/EthernetManager.cpp \
  ../Core/Lib/MQTT/../../Lib/MQTT/MQTTPacket/src/../../../../Lib/MQTT/MQTTPacket/src/../../../../Lib/MQTT/MQTTPacket/src/MQTTPacket.h \
  ../Core/Lib/MQTT/../../Lib/MQTT/MQTTPacket/src/../../../../Lib/MQTT/MQTTPacket/src/../../../../Lib/MQTT/MQTTPacket/src/StackTrace.h \
  ../Core/Lib/MQTT/../../Lib/MQTT/mqtt_interface.h \
- ../Core/Lib/MQTT/mqtt_interface.h ../Core/Inc/main.h \
- ../Core/Lib/DHCP/dhcp.h ../Core/Inc/network_init.h \
- ../Core/Inc/mqtt_init.h ../Core/Lib/JSON/cJSON.h \
- ../Core/Inc/EthernetManager.h ../Core/Lib/DNS/dns.h \
- ../Core/Lib/Ethernet/socket.h \
- ../Core/Lib/Ethernet/../../Lib/Ethernet/wizchip_conf.h \
- ../Core/Inc/utils.h
+ ../Core/Lib/MQTT/mqtt_interface.h ../Core/Lib/DHCP/dhcp.h \
+ ../Core/Inc/CplusUtils.h ../Core/Lib/JSON/cJSON.h ../Core/Inc/config.h \
+ ../Core/Lib/Ethernet/wizchip_conf.h \
+ ../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/w5500.h \
+ ../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/../../../Lib/Ethernet/wizchip_conf.h \
+ ../Core/Lib/DNS/dns.h ../Core/Lib/Ethernet/socket.h \
+ ../Core/Lib/Ethernet/../../Lib/Ethernet/wizchip_conf.h
 ../Core/Inc/EthernetManager.h:
-../Core/Inc/config.h:
+../Core/Inc/main.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h:
@@ -82,10 +79,6 @@ Core/Src/EthernetManager.o: ../Core/Src/EthernetManager.cpp \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
-../Core/Lib/Ethernet/wizchip_conf.h:
-../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/w5500.h:
-../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/../../../Lib/Ethernet/wizchip_conf.h:
-../Core/Inc/utils.h:
 ../Core/Lib/MQTT/MQTTClient.h:
 ../Core/Lib/MQTT/../../Lib/MQTT/MQTTPacket/src/MQTTPacket.h:
 ../Core/Lib/MQTT/../../Lib/MQTT/MQTTPacket/src/../../../../Lib/MQTT/MQTTPacket/src/MQTTConnect.h:
@@ -97,13 +90,13 @@ Core/Src/EthernetManager.o: ../Core/Src/EthernetManager.cpp \
 ../Core/Lib/MQTT/../../Lib/MQTT/MQTTPacket/src/../../../../Lib/MQTT/MQTTPacket/src/../../../../Lib/MQTT/MQTTPacket/src/StackTrace.h:
 ../Core/Lib/MQTT/../../Lib/MQTT/mqtt_interface.h:
 ../Core/Lib/MQTT/mqtt_interface.h:
-../Core/Inc/main.h:
 ../Core/Lib/DHCP/dhcp.h:
-../Core/Inc/network_init.h:
-../Core/Inc/mqtt_init.h:
+../Core/Inc/CplusUtils.h:
 ../Core/Lib/JSON/cJSON.h:
-../Core/Inc/EthernetManager.h:
+../Core/Inc/config.h:
+../Core/Lib/Ethernet/wizchip_conf.h:
+../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/w5500.h:
+../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/../../../Lib/Ethernet/wizchip_conf.h:
 ../Core/Lib/DNS/dns.h:
 ../Core/Lib/Ethernet/socket.h:
 ../Core/Lib/Ethernet/../../Lib/Ethernet/wizchip_conf.h:
-../Core/Inc/utils.h:

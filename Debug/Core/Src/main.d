@@ -40,14 +40,16 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
  ../Core/Lib/MQTT/../../Lib/MQTT/MQTTPacket/src/../../../../Lib/MQTT/MQTTPacket/src/../../../../Lib/MQTT/MQTTPacket/src/StackTrace.h \
  ../Core/Lib/MQTT/../../Lib/MQTT/mqtt_interface.h \
  ../Core/Lib/MQTT/mqtt_interface.h ../Core/Lib/DHCP/dhcp.h \
- ../Core/Inc/network_init.h ../Core/Lib/Ethernet/wizchip_conf.h \
+ ../Core/Inc/config.h ../Core/Lib/Ethernet/wizchip_conf.h \
  ../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/w5500.h \
  ../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/../../../Lib/Ethernet/wizchip_conf.h \
- ../Core/Inc/main.h ../Core/Inc/mqtt_init.h ../Core/Lib/JSON/cJSON.h \
- ../Core/Inc/utils.h ../Core/Inc/config.h ../Core/Inc/EthernetManager.h \
+ ../Core/Inc/mqtt_init.h ../Core/Lib/JSON/cJSON.h \
+ ../Core/Inc/CplusUtils.h ../Core/Inc/main.h ../Core/Inc/config.h \
+ ../Core/Inc/CplusUtils.h ../Core/Inc/EthernetManager.h \
  ../Core/Lib/DNS/dns.h ../Core/Lib/Ethernet/socket.h \
  ../Core/Lib/Ethernet/../../Lib/Ethernet/wizchip_conf.h \
- ../Core/Inc/utils.h ../Core/Inc/network_init.h ../Core/Inc/mqtt_init.h
+ ../Core/Inc/CircularBuffer.h ../Core/Inc/UARTHandler.h \
+ ../Core/Inc/CircularBuffer.h
 ../Core/Inc/main.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
@@ -91,19 +93,20 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
 ../Core/Lib/MQTT/../../Lib/MQTT/mqtt_interface.h:
 ../Core/Lib/MQTT/mqtt_interface.h:
 ../Core/Lib/DHCP/dhcp.h:
-../Core/Inc/network_init.h:
+../Core/Inc/config.h:
 ../Core/Lib/Ethernet/wizchip_conf.h:
 ../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/w5500.h:
 ../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/../../../Lib/Ethernet/wizchip_conf.h:
-../Core/Inc/main.h:
 ../Core/Inc/mqtt_init.h:
 ../Core/Lib/JSON/cJSON.h:
-../Core/Inc/utils.h:
+../Core/Inc/CplusUtils.h:
+../Core/Inc/main.h:
 ../Core/Inc/config.h:
+../Core/Inc/CplusUtils.h:
 ../Core/Inc/EthernetManager.h:
 ../Core/Lib/DNS/dns.h:
 ../Core/Lib/Ethernet/socket.h:
 ../Core/Lib/Ethernet/../../Lib/Ethernet/wizchip_conf.h:
-../Core/Inc/utils.h:
-../Core/Inc/network_init.h:
-../Core/Inc/mqtt_init.h:
+../Core/Inc/CircularBuffer.h:
+../Core/Inc/UARTHandler.h:
+../Core/Inc/CircularBuffer.h:

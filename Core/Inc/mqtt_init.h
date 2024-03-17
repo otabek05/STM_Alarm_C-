@@ -8,18 +8,21 @@ extern "C" {
 #include "cJSON.h"
 }
 
-#include "utils.h"  // Assuming utils.h is C++ compatible or similarly wrapped
 
-#include "config.h"// cJSON is typically C, so ensure it's wrapped if necessary
 
-class MQTTConnection {
+#include "CplusUtils.h"
+#include "config.h"
+
+class Utils;
+class MQTTConnection{
 public:
     MQTTConnection();
     ~MQTTConnection();
-    void init(Config config);
+    void init(Config config, Utils *utilInstance);
+    Utils* utils;
     bool connect(Config conf);
-    bool publish(char* message, Config config);
-    void subscribe( std::string topic);
+    bool publish(const std::string& message, Config config);
+    void subscribe(std::string topic);
     void disconnect();
     void mqttYield();
 
@@ -34,5 +37,7 @@ private:
     static uint8_t send_buffer[2048];
     static uint8_t recieve_buff[2048];
 };
+
+void messageArrived(MessageData* md);
 
 #endif // MQTT_CONNECTION_H

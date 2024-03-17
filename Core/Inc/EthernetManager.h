@@ -1,10 +1,11 @@
 #ifndef ETHERNETMANAGER_H
 #define ETHERNETMANAGER_H
-
+#include "main.h"
+#include "CplusUtils.h"
 #include <cstdint>
 #include <array>
 #include "config.h"
-#include "utils.h"
+
 
 extern "C" {
 #include "stm32f4xx_hal.h"
@@ -17,17 +18,22 @@ extern "C" {
 
 extern SPI_HandleTypeDef hspi2;
 }
+class Utils;
 
 class EthernetManager {
 public:
     EthernetManager();
     ~EthernetManager();
-    void initialize(const Config *conf);
+
+
+    void initialize(const Config *conf , Utils *UtilClass );
     bool performPingTest();
     void reconnect();
 
     bool isIpAssigned();
     void setIPAssiged(bool val);
+
+    Utils* utils;
 private:
 
     static bool ip_assigned;
@@ -56,6 +62,8 @@ private:
     // Buffers
     static uint8_t dhcp_buffer[2048];
     static uint8_t dns_buffer[2048];
+    static uint8_t DHCP_SOCKET;
+    static uint8_t DNS_SOCKET;
 
     // Add other member variables as needed
 };

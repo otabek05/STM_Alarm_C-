@@ -1,6 +1,9 @@
+
 #include "EthernetManager.h"
-#include <cstring> // For std::memcpy and std::memset
-#include "utils.h" // Make sure utils.h defines UART_Printf or replace with your logging mechanism
+
+#include <cstring>
+
+
 
 // Assuming extern declaration of hspi2, W5500_CS_GPIO_Port, and W5x00_RESET_PORT are done correctly elsewhere
 extern SPI_HandleTypeDef hspi2;
@@ -8,6 +11,8 @@ extern SPI_HandleTypeDef hspi2;
 // Static buffer definitions
 uint8_t EthernetManager::dhcp_buffer[2048];
 uint8_t EthernetManager::dns_buffer[2048];
+uint8_t EthernetManager::DHCP_SOCKET = 1;
+uint8_t EthernetManager::DNS_SOCKET = 1;
 
 
 EthernetManager::~EthernetManager() {
@@ -28,8 +33,11 @@ void EthernetManager::setIPAssiged(bool val){
 	ip_assigned = val;
 }
 
-void EthernetManager::initialize(const Config *conf) {
-	Print("Initializing Internet \r\n");
+void EthernetManager::initialize(const Config *conf, Utils *utilClass) {
+    utils = utilClass;
+    utils->playSound();
+	utils->print("Initializing Internet \r\n");
+
     resetAssert();
     HAL_Delay(100); // Delay for the reset
     resetDeassert();
@@ -41,8 +49,7 @@ void EthernetManager::initialize(const Config *conf) {
 }
 
 bool EthernetManager::performPingTest() {
-    // Placeholder for ping test implementation
-    // Return true if successful, false otherwise
+
     return false;
 }
 
@@ -52,18 +59,18 @@ void EthernetManager::reconnect() {
     resetDeassert();
 
     initWIZCHIP();
-    // Consider re-applying network configuration if needed
+
 }
 
 
 
 void EthernetManager::resetAssert() {
-	Print("Resetting!!! \r\n");
+    utils->print("Resetting!!! \r\n");
     HAL_GPIO_WritePin(W5x00_RESET_PORT, W5x00_RESET_PIN, GPIO_PIN_RESET);
 }
 
 void EthernetManager::resetDeassert() {
-	Print("Desserting!!! \r\n");
+	utils->print("Desserting!!! \r\n");
     HAL_GPIO_WritePin(W5x00_RESET_PORT, W5x00_RESET_PIN, GPIO_PIN_SET);
 }
 
@@ -104,17 +111,16 @@ void EthernetManager::W5500_WriteByte(uint8_t byte) {
 }
 
 void EthernetManager::Callback_IPAssigned() {
-	Print("Connected to the internet!!\r\n");
-	ip_assigned = true;
+    	ip_assigned = true;
 }
 
 void EthernetManager::Callback_IPConflict() {
-  Print("Callback: IP conflict!\r\n");
+ // Print("Callback: IP conflict!\r\n");
 }
 
 
 void EthernetManager::initWIZCHIP() {
-    Print("\r\nWIZCHIP Initialization called!\r\n");
+    utils->print("\r\nWIZCHIP Initialization called!\r\n");
     W5500_Unselect();
     reg_wizchip_cs_cbfunc(W5500_Select, W5500_Unselect);
     reg_wizchip_spi_cbfunc(W5500_ReadByte, W5500_WriteByte);
@@ -122,7 +128,7 @@ void EthernetManager::initWIZCHIP() {
 
     uint8_t memsize[2][8] = {{2, 2, 2, 2, 2, 2, 2, 2}, {2, 2, 2, 2, 2, 2, 2, 2}};
     if (ctlwizchip(CW_INIT_WIZCHIP, (void*)memsize) == -1) {
-        Print("WIZCHIP Initialization failed.\r\n");
+     //   Print("WIZCHIP Initialization failed.\r\n");
         return;
     }
 
@@ -130,24 +136,19 @@ void EthernetManager::initWIZCHIP() {
     uint8_t tmp;
     do {
         if (ctlwizchip(CW_GET_PHYLINK, (void*)&tmp) == -1) {
-           Print("UNKNOWN PHY LINK STATUS.\r\n");
+         //  Print("UNKNOWN PHY LINK STATUS.\r\n");
             return;
         }
     } while (tmp == PHY_LINK_OFF);
- //   UART_Printf("WIZCHIP Initialized successfully.\r\n");
+    utils->print("WIZCHIP Initialized successfully.\r\n");
 }
 
 
 void EthernetManager::configureNetwork(const Config* conf) {
-
-
-	Print("Initializing Netwok Configuration!!! \r\n");
-
+	utils->print("Initializing Netwok Configuration!!! \r\n");
     if (conf == nullptr) {
-
            return;
        }
-
        uint8_t mac[6];
        getSHAR(mac); // Assuming you have a function getSHAR to get MAC address
        HAL_Delay(300);
@@ -162,33 +163,31 @@ void EthernetManager::configureNetwork(const Config* conf) {
        };
 
        setSHAR(net_info.mac); // Apply MAC address
-       Print("MAC Address: %02X:%02X:%02X:%02X:%02X:%02X\r\n",
+
+       utils->print("MAC Address: %02X:%02X:%02X:%02X:%02X:%02X\r\n",
                   mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 
        if (conf->getDHCPEnabled()) {
            // DHCP mode
+    	   utils->print("DHCP mode has been enabled@ \r\n");
            DHCP_init(DHCP_SOCKET, dhcp_buffer);
            reg_dhcp_cbfunc(Callback_IPAssigned, Callback_IPAssigned, Callback_IPConflict);
 
-
-
    	    do {
-   	        Print("Attempting DHCP lease...\r\n");
+   	        utils->print("Attempting DHCP lease...\r\n");
    	         setIPAssiged(false);
    	        while (!isIpAssigned()) {
    	            DHCP_run();
-   	            HAL_Delay(300); // Delay between DHCP runs
+   	            HAL_Delay(100); // Delay between DHCP runs
    	        }
    	    } while (!isIpAssigned()); // Retry mechanism if not successful
-
-           Print("ip has been obtained!!! \r\n");
            // Get network configuration from DHCP
            getIPfromDHCP(net_info.ip);
            getGWfromDHCP(net_info.gw);
            getSNfromDHCP(net_info.sn);
            getDNSfromDHCP(net_info.dns);
        } else {
-    	   Print("Mode is in Static!!! \r\n");
+    	   utils->print("STATIC mode has been enabled@ \r\n");
            // Static IP mode
     	   std::memcpy(net_info.ip, conf->getIP().data(), 4); // For std::array
     	   std::memcpy(net_info.gw, conf->getGateway().data(), 4); // For std::array
@@ -196,12 +195,11 @@ void EthernetManager::configureNetwork(const Config* conf) {
     	   std::memcpy(net_info.dns, conf->getDNS().data(), 4); // For std::array
            net_info.dhcp = NETINFO_STATIC;
        }
-
        // Apply network settings to WIZnet chip
        wizchip_setnetinfo(&net_info);
 
        // Print network information
-       Print("IP: %d.%d.%d.%d\r\nGW: %d.%d.%d.%d\r\nNet: %d.%d.%d.%d\r\nDNS: %d.%d.%d.%d\r\n",
+       utils->print("IP: %d.%d.%d.%d\r\nGW: %d.%d.%d.%d\r\nNet: %d.%d.%d.%d\r\nDNS: %d.%d.%d.%d\r\n",
                    net_info.ip[0], net_info.ip[1], net_info.ip[2], net_info.ip[3],
                    net_info.gw[0], net_info.gw[1], net_info.gw[2], net_info.gw[3],
                    net_info.sn[0], net_info.sn[1], net_info.sn[2], net_info.sn[3],

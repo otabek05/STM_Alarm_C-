@@ -22,10 +22,10 @@
 #include "stm32f4xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-/* USER CODE END Includes */
 
 #include "dhcp.h"
 #include "mqtt_interface.h"
+/* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN TD */
@@ -234,8 +234,16 @@ void ADC_IRQHandler(void)
 void USART1_IRQHandler(void)
 {
   /* USER CODE BEGIN USART1_IRQn 0 */
+/*
+	if ((__HAL_UART_GET_FLAG(&huart1, UART_FLAG_RXNE) != RESET ) && (__HAL_UART_GET_IT_SOURCE(&huart1, UART_IT_RXNE) != RESET) ) {
+		   HAL_UART_RxCpltCallback(&huart1);
+		   __HAL_UART_CLEAR_PEFLAG(&huart1);
+	  }
+
+	  */
 
   /* USER CODE END USART1_IRQn 0 */
+  HAL_UART_IRQHandler(&huart1);
   /* USER CODE BEGIN USART1_IRQn 1 */
 
   /* USER CODE END USART1_IRQn 1 */

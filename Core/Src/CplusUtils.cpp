@@ -1,0 +1,104 @@
+#include "CplusUtils.h"
+
+
+
+
+
+Utils::Utils(){}
+
+void Utils::init(Config* config){
+	conf = *config;
+
+	switches[0] = {GPIOE, GPIO_PIN_12}; // switch1
+	switches[1] = {GPIOE, GPIO_PIN_13}; // switch2
+	switches[2] = {GPIOE, GPIO_PIN_14}; // switch3
+	switches[3] = {GPIOE, GPIO_PIN_15}; // switch4
+	switches[4] = {GPIOA, GPIO_PIN_4};  // switch5
+	switches[5] = {GPIOA, GPIO_PIN_5};  // switch6
+	switches[6] = {GPIOA, GPIO_PIN_6};  // switch7
+	switches[7] = {GPIOA, GPIO_PIN_7};  // switch8
+
+
+    digitalInputs[0] = {GPIOC, GPIO_PIN_0};   // DI1
+    digitalInputs[1] = {GPIOC, GPIO_PIN_1};   // DI2
+    digitalInputs[2] = {GPIOC, GPIO_PIN_2};   // DI3
+    digitalInputs[3] = {GPIOC, GPIO_PIN_3};   // DI4
+    digitalInputs[4] = {GPIOD, GPIO_PIN_8};   // DI5
+    digitalInputs[5] = {GPIOD, GPIO_PIN_9};   // DI6
+    digitalInputs[6] = {GPIOD, GPIO_PIN_10};  // DI7
+    digitalInputs[7] = {GPIOD, GPIO_PIN_13};  // DI8
+    digitalInputs[8] = {GPIOC, GPIO_PIN_6};   // DI9
+    digitalInputs[9] = {GPIOC, GPIO_PIN_7};   // DI10
+    digitalInputs[10] = {GPIOC, GPIO_PIN_8};  // DI11
+    digitalInputs[11] = {GPIOC, GPIO_PIN_9};  // DI12
+    digitalInputs[12] = {GPIOA, GPIO_PIN_8};  // DI13
+    digitalInputs[13] = {GPIOA, GPIO_PIN_9};  // DI14
+    digitalInputs[14] = {GPIOA, GPIO_PIN_10}; // DI15
+    digitalInputs[15] = {GPIOA, GPIO_PIN_11}; // DI16
+
+
+}
+void Utils::print(const char* fmt, ...){
+	 char buff[256];
+	 va_list args;
+	 va_start(args, fmt);
+	 vsnprintf(buff, sizeof(buff), fmt, args);
+	 HAL_UART_Transmit(&huart1, (uint8_t*)buff, strlen(buff),
+	                      HAL_MAX_DELAY);
+	 va_end(args);
+}
+
+
+size_t Utils::getSwitchesCount() const {
+    return sizeof(switches) / sizeof(switches[0]);
+}
+
+void Utils::playSound(){
+	HAL_GPIO_WritePin(sound_GPIO_Port, sound_Pin, GPIO_PIN_SET);
+	HAL_Delay(20);
+	HAL_GPIO_WritePin(sound_GPIO_Port, sound_Pin, GPIO_PIN_RESET);
+	HAL_Delay(20);
+}
+
+bool Utils::switchRelay(GPIO_TypeDef* port, uint16_t switchPin, int status){
+    if (status > 1) {
+    	print("Status is not valid %d \r\n", status);
+    	return false;
+    }
+	GPIO_PinState gpioStatus = status == 1 ? GPIO_PIN_SET : GPIO_PIN_RESET;
+	playSound();
+	HAL_GPIO_WritePin(port, switchPin, gpioStatus);
+	return true;
+}
+
+int Utils::readGPIOPinState(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin){
+	return HAL_GPIO_ReadPin(GPIOx, GPIO_Pin) == GPIO_PIN_SET ? 0 : 1;
+}
+
+void Utils::createJSON(std::string *message) {
+	   cJSON *statusJson = cJSON_CreateObject();
+	    for (int i = 0; i < 8; i++) {
+	        int status = readGPIOPinState(switches[i].port, switches[i].pin);
+	        cJSON_AddNumberToObject(statusJson, conf.getDigitalOutputName(i).c_str(), status);
+	    }
+	    for (int i = 0; i < 16; i++) {
+	        int status = readGPIOPinState(digitalInputs[i].port, digitalInputs[i].pin);
+	        cJSON_AddNumberToObject(statusJson, conf.getDigitalInputName(i).c_str(), status);
+	    }
+	    char* json_string = cJSON_Print(statusJson);
+	    if (json_string != nullptr) {
+	        *message = json_string;
+	        free(json_string); // Free the allocated memory
+	    }
+	    cJSON_Delete(statusJson); // Clean up the cJSON object
+}
+
+void print(const char* fmt, ...){
+	 char buff[256];
+	 va_list args;
+	 va_start(args, fmt);
+	 vsnprintf(buff, sizeof(buff), fmt, args);
+	 HAL_UART_Transmit(&huart1, (uint8_t*)buff, strlen(buff),
+	                      HAL_MAX_DELAY);
+	 va_end(args);
+}

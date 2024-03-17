@@ -39,6 +39,7 @@ extern "C" {
 #include "MQTTClient.h"
 #include "mqtt_interface.h"
 #include "dhcp.h"
+
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -130,22 +131,5 @@ void Error_Handler(void);
 #ifdef __cplusplus
 }
 #endif
-
-
-#ifdef __cplusplus
-#include <array>
-#include <string>
-#include "network_init.h"
-#include "mqtt_init.h"
-#include "utils.h"
-#include "config.h"
-#include "EthernetManager.h"
-
-// External variable declarations
-extern uint8_t mac[6];
-extern uint32_t timerValue;
-
-
-#endif /* __cplusplus */
 
 #endif /* __MAIN_H */

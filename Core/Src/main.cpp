@@ -21,13 +21,12 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-/* vim: set ai et ts=4 sw=4: */
-
-
-#include "utils.h"
-#include "network_init.h"
+#include "config.h"
 #include "mqtt_init.h"
-#include <string>
+#include "CplusUtils.h"
+#include "EthernetManager.h"
+#include "CircularBuffer.h"
+#include "UARTHandler.h"
 
 /* USER CODE END Includes */
 
@@ -55,23 +54,32 @@ SPI_HandleTypeDef hspi2;
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
-MQTTClient mqtt_client;
-Network network;
-
 
 Config config;
+
+Utils utils;
+
 EthernetManager ethManager;
+
 MQTTConnection mqttClient;
 
+UARTHandler uartHandler;
 
+#define ADC_CHANNELS 4
+#define ADC_RESOLUTION 4095.0
+#define VREF 3.3
+#define MAX_JSON_SIZE 512
 
-#define ADC_CHANNELS 4 // Number of channels per ADC
-#define ADC_RESOLUTION 4095.0 // 12-bit ADC
-#define VREF 3.3 // Reference voltage in volts
-#define MAX_JSON_SIZE 512 // Adjust the size as needed
+#define RX_BUFFER_SIZE 128
+uint8_t rxBuffer[1024];
+uint8_t rxData[12];
+uint16_t rxIndex = 0;
+
+bool messageReceived = false;
+
 
 volatile int timeValue;
-static std::string statusJsonBuffer[MAX_JSON_SIZE];
+static std::string statusJsonBuffer;
 
 
 
@@ -129,36 +137,22 @@ int main(void)
   MX_ADC1_Init();
   MX_ADC2_Init();
   /* USER CODE BEGIN 2 */
+//  HAL_TIM_Base_Start_IT(&htim1);
+//  __HAL_UART_ENABLE_IT(&huart1, UART_IT_RXNE);
 
  config.init();
 
- ethManager.initialize(&config);
+ utils.init(&config);
 
- Print("Welcome to the New World");
+// ethManager.initialize(&config, &utils);
 
- mqttClient.init(config);
+// config.initmqttConfig();
 
-//  HAL_TIM_Base_Start_IT(&htim1);
- // resetAssert();
+// mqttClient.init(config, &utils);
 
- // resetDeassert();
+// mqttClient.subscribe(config.getTopicSubscribe());
 
- // PlayButtonSound();
-
-//  PlayButtonSound();
-
-//  GetMAC(&config);
-//  WIZCHIPInit();
-
- // UART_Printf("Assigned MAC address %s \r\n", config.clientId);
-//  EthernetInit(config);
-//  while (!MQTTConnecting(&mqtt_client, &network, config)){
-	//  UART_Printf("Reconnecting \r\n ");
-//  }
-
-//  __HAL_UART_ENABLE_IT(&huart1, UART_IT_RXNE);
-
-
+ uartHandler.init(&huart1);
 
   /* USER CODE END 2 */
 
@@ -168,13 +162,15 @@ int main(void)
   while (true)
   {
 
-	mqttClient.mqttYield();
+//	mqttClient.mqttYield();
 
-   // Print("Data has been published!!! \r\n");
+//	utils.createJSON(&statusJsonBuffer);
 
-    mqttClient.publish("HelloMQTT", config);
+ //   mqttClient.publish(statusJsonBuffer, config);
+    utils.print("While loop \r\n");
+    uartHandler.processReceivedData();
+
     HAL_Delay(3000);
-
 
     /* USER CODE END WHILE */
 
@@ -572,15 +568,15 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
     }
 }
 
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 
-    if (huart->Instance == USART1) {
+extern "C" void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 
-    //	rx = (uint8_t) (huart->Instance->DR & (uint8_t) 0x00FF);
-    //	UART_Printf("Interrupt has been recieved!! \r\n");
+
+    if (huart->Instance == USART1) { // Check if this is the correct UART instance
+    	uartHandler.onReceive();
     }
 
-// receive_and_send_back();
+
 }
 /* USER CODE END 4 */
 

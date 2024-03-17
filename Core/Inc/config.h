@@ -10,6 +10,7 @@
 extern "C" {
 #include "stm32f4xx_hal.h"
 #include "wizchip_conf.h"
+#include "string.h"
 
 }
 constexpr size_t MAX_ANALOG_INPUTS = 10;
@@ -59,8 +60,11 @@ public:
     void setDigitalInputNames(const std::array<std::string, MAX_DIGITAL_INPUTS>& value);
     void setDigitalOutputNames(const std::array<std::string, MAX_DIGITAL_OUTPUTS>& value);
 
-
+    std::string getAnalogInputName(int index);
+    std::string getDigitalInputName(int index);
+    std::string getDigitalOutputName(int index);
     void init();
+    void initmqttConfig();
 private:
     // Member variables
     std::array<uint8_t, 4> broker_ip;

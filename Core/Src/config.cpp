@@ -8,7 +8,7 @@ Config::Config(){
 
 void Config::init() {
 
-    setBrokerIP({175, 210, 42,26});
+    setBrokerIP({192, 168, 200,158});
     setBrokerPort(1883);
     setIP({172, 30, 1, 123});
     setGateway({172, 30, 1, 254});
@@ -21,15 +21,46 @@ void Config::init() {
     setUsername("user");
     setClientId(std::string(clientId));
 
-
     setPassword("pass");
     setTopicPublish("topic/pub");
     setQoS(1); // Quality of Service level
 
-
     setAnalogInputNames({"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10"});
     setDigitalInputNames({"D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9", "D10"});
     setDigitalOutputNames({"O1", "O2", "O3", "O4", "O5", "O6", "O7", "O8", "O9", "O10"});
+}
+
+
+std::string Config::getAnalogInputName(int index){
+	return analog_input_names[index];
+}
+
+std::string Config::getDigitalInputName(int index){
+	return digital_input_names[index];
+}
+
+std::string Config::getDigitalOutputName(int index){
+	return digital_output_names[index];
+}
+
+void Config::initmqttConfig() {
+    uint8_t mac[6];
+    getSHAR(mac);
+    char macString[18] = {0}; // Initialize macString with zeros
+    for (int i = 0; i < 6; ++i) {
+        if (i > 0) {
+            strcat(macString, ":"); // Add ':' between bytes except for the first one
+        }
+        sprintf(macString + strlen(macString), "%02X", mac[i]); // Append two characters per byte
+    }
+
+     setSHAR(mac); // Commented out because it seems unnecessary here
+    std::string clientID = std::string(macString);
+    std::string data = "data/" + clientID;
+
+    // Set MQTT client ID and topic to subscribe
+    setClientId(clientID);
+    setTopicSubscribe(data);
 }
 
 
