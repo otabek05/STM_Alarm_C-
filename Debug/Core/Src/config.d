@@ -31,7 +31,8 @@ Core/Src/config.o: ../Core/Src/config.cpp ../Core/Inc/config.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
  ../Core/Lib/Ethernet/wizchip_conf.h \
  ../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/w5500.h \
- ../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/../../../Lib/Ethernet/wizchip_conf.h
+ ../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/../../../Lib/Ethernet/wizchip_conf.h \
+ ../Core/Lib/JSON/cJSON.h
 ../Core/Inc/config.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
@@ -66,3 +67,4 @@ Core/Src/config.o: ../Core/Src/config.cpp ../Core/Inc/config.h \
 ../Core/Lib/Ethernet/wizchip_conf.h:
 ../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/w5500.h:
 ../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/../../../Lib/Ethernet/wizchip_conf.h:
+../Core/Lib/JSON/cJSON.h:

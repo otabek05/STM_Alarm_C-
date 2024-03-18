@@ -8,7 +8,7 @@ Config::Config(){
 
 void Config::init() {
 
-    setBrokerIP({192, 168, 200,158});
+    setBrokerIP({172, 30,1,25});
     setBrokerPort(1883);
     setIP({172, 30, 1, 123});
     setGateway({172, 30, 1, 254});
@@ -25,9 +25,10 @@ void Config::init() {
     setTopicPublish("topic/pub");
     setQoS(1); // Quality of Service level
 
-    setAnalogInputNames({"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10"});
-    setDigitalInputNames({"D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9", "D10"});
-    setDigitalOutputNames({"O1", "O2", "O3", "O4", "O5", "O6", "O7", "O8", "O9", "O10"});
+    setAnalogInputNames({"Analog1", "Analog2", "Analog3", "Analog4", "Analog5", "Analog6", "Analog7", "Analog8",});
+    setDigitalInputNames({"DI1", "DI2", "DI3", "DI4", "DI5", "DI6", "DI7", "DI8", "DI9", "DI10", "DI11", "DI12", "DI13", "DI14", "DI15", "DI16"});
+    setDigitalOutputNames({"Relay1", "Relay2", "Relay3", "Relay4", "Relay5", "Relay6", "Relay7", "Relay8",});
+
 }
 
 
@@ -62,6 +63,69 @@ void Config::initmqttConfig() {
     setClientId(clientID);
     setTopicSubscribe(data);
 }
+
+
+cJSON *createJsonArray(const uint8_t arr[], size_t len) {
+       cJSON *jsonArray = cJSON_CreateArray();
+       for (size_t i = 0; i < len; ++i) {
+           cJSON_AddItemToArray(jsonArray, cJSON_CreateNumber(arr[i]));
+       }
+       return jsonArray;
+   }
+
+
+std::string Config::getInfoList() {
+    cJSON *root = cJSON_CreateObject();
+    std::string serializedDataStr;
+
+    if (root == NULL) {
+        return "{}";
+    }
+
+    // Existing configurations
+ //   cJSON_AddItemToObject(root, "ip", createJsonArray(ip.data(), ip.size()));
+ //   cJSON_AddItemToObject(root, "gateway", createJsonArray(gateway.data(), gateway.size()));
+ //   cJSON_AddItemToObject(root, "subnet", createJsonArray(subnet.data(), subnet.size()));
+ //   cJSON_AddItemToObject(root, "dns", createJsonArray(dns.data(), dns.size()));
+
+    // Serialize Analog Input Names
+    auto analogInputNames = getAnalogInputNames();
+    cJSON *analogInputsArray = cJSON_CreateArray();
+    for (const auto& name : analogInputNames) {
+        cJSON_AddItemToArray(analogInputsArray, cJSON_CreateString(name.c_str()));
+    }
+   cJSON_AddItemToObject(root, "ai", analogInputsArray);
+
+    // Serialize Digital Input Names
+    auto digitalInputNames = getDigitalInputNames();
+    cJSON *digitalInputsArray = cJSON_CreateArray();
+    for (const auto& name : digitalInputNames) {
+        cJSON_AddItemToArray(digitalInputsArray, cJSON_CreateString(name.c_str()));
+    }
+    cJSON_AddItemToObject(root, "di", digitalInputsArray);
+
+    // Serialize Digital Output Names
+    auto digitalOutputNames = getDigitalOutputNames();
+    cJSON *digitalOutputsArray = cJSON_CreateArray();
+    for (const auto& name : digitalOutputNames) {
+        cJSON_AddItemToArray(digitalOutputsArray, cJSON_CreateString(name.c_str()));
+    }
+    cJSON_AddItemToObject(root, "type", cJSON_CreateString("info"));
+    cJSON_AddItemToObject(root, "relay", digitalOutputsArray);
+    cJSON_AddItemToObject(root, "mac", cJSON_CreateString(getClientId().c_str()));
+    cJSON_AddItemToObject(root, "net-status", cJSON_CreateBool(getDHCPEnabled()));
+
+    // Serialize JSON to string
+    char *serializedData = cJSON_Print(root);
+    if (serializedData != NULL) {
+        serializedDataStr = serializedData;
+        free(serializedData);
+    }
+
+    cJSON_Delete(root);
+    return serializedDataStr;
+}
+
 
 
 // Getters

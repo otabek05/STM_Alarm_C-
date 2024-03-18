@@ -43,7 +43,7 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
  ../Core/Inc/config.h ../Core/Lib/Ethernet/wizchip_conf.h \
  ../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/w5500.h \
  ../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/../../../Lib/Ethernet/wizchip_conf.h \
- ../Core/Inc/mqtt_init.h ../Core/Lib/JSON/cJSON.h \
+ ../Core/Lib/JSON/cJSON.h ../Core/Inc/mqtt_init.h \
  ../Core/Inc/CplusUtils.h ../Core/Inc/main.h ../Core/Inc/config.h \
  ../Core/Inc/CplusUtils.h ../Core/Inc/EthernetManager.h \
  ../Core/Lib/DNS/dns.h ../Core/Lib/Ethernet/socket.h \
@@ -97,8 +97,8 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
 ../Core/Lib/Ethernet/wizchip_conf.h:
 ../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/w5500.h:
 ../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/../../../Lib/Ethernet/wizchip_conf.h:
-../Core/Inc/mqtt_init.h:
 ../Core/Lib/JSON/cJSON.h:
+../Core/Inc/mqtt_init.h:
 ../Core/Inc/CplusUtils.h:
 ../Core/Inc/main.h:
 ../Core/Inc/config.h:

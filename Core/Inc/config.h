@@ -11,11 +11,12 @@ extern "C" {
 #include "stm32f4xx_hal.h"
 #include "wizchip_conf.h"
 #include "string.h"
+#include "cJSON.h"
 
 }
-constexpr size_t MAX_ANALOG_INPUTS = 10;
-constexpr size_t MAX_DIGITAL_INPUTS = 10;
-constexpr size_t MAX_DIGITAL_OUTPUTS = 10;
+constexpr size_t MAX_ANALOG_INPUTS = 8;
+constexpr size_t MAX_DIGITAL_INPUTS = 16;
+constexpr size_t MAX_DIGITAL_OUTPUTS = 8;
 
 class Config {
 public:
@@ -65,6 +66,7 @@ public:
     std::string getDigitalOutputName(int index);
     void init();
     void initmqttConfig();
+    std::string getInfoList();
 private:
     // Member variables
     std::array<uint8_t, 4> broker_ip;
@@ -86,6 +88,7 @@ private:
     std::array<std::string, MAX_DIGITAL_INPUTS> digital_input_names;
     std::array<std::string, MAX_DIGITAL_OUTPUTS> digital_output_names;
 };
+
 
 
 

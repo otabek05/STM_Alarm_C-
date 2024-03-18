@@ -240,7 +240,7 @@ void USART1_IRQHandler(void)
 		   __HAL_UART_CLEAR_PEFLAG(&huart1);
 	  }
 
-	  */
+*/
 
   /* USER CODE END USART1_IRQn 0 */
   HAL_UART_IRQHandler(&huart1);
