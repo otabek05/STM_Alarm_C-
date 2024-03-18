@@ -8,11 +8,24 @@ UARTHandler::UARTHandler() : bufferIndex(0), newDataAvailable(false) {
     memset(receiveBuffer, 0, sizeof(receiveBuffer));
 }
 
-void UARTHandler::init(UART_HandleTypeDef* uartHandle, Config* configInstance, Utils* utilsInstance ) {
+void UARTHandler::init(UART_HandleTypeDef* uartHandle, Utils* utilsInstance, Config* configInstance) {
     huart = uartHandle;
-    config = configInstance;
     utils = utilsInstance;
-    HAL_UART_Receive_IT(huart, &rxByte, 1); // Start reception in interrupt mode
+    config = configInstance;
+    HAL_StatusTypeDef result = HAL_UART_Receive_IT(huart, &rxByte, 1);
+
+    if(result != HAL_OK) {
+        // Error handling
+        if(result == HAL_ERROR) {
+            print("UART Receive_IT Error: HAL_ERROR\r\n");
+        } else if(result == HAL_BUSY) {
+            print("UART Receive_IT Error: HAL_BUSY\r\n");
+        } else if(result == HAL_TIMEOUT) {
+            print("UART Receive_IT Error: HAL_TIMEOUT\r\n");
+        } else {
+            print("UART Receive_IT Error: Unknown Error Code %d\r\n", result);
+        }
+    }
 }
 
 bool UARTHandler::isNewMessageArrived() {
@@ -29,8 +42,10 @@ void UARTHandler::onReceive() {
     if (bufferIndex < sizeof(receiveBuffer) - 1) {
         receiveBuffer[bufferIndex++] = rxByte;
         // Check for message end (e.g., newline character)
+      //  utils->print("Entered to this function \r\n");
         if (rxByte == '\n') {
             receiveBuffer[bufferIndex] = '\0';
+
             bufferIndex = 0; // Reset index for the next message
             setNewDataAvailable(true);
         }
@@ -48,7 +63,6 @@ void UARTHandler::onReceive() {
 
 void UARTHandler::processReceivedData() {
     if (!isNewMessageArrived()) return; // Early exit if no new data
-
     cJSON *json = cJSON_Parse(reinterpret_cast<const char*>(receiveBuffer));
     if (json == NULL) {
         const char *error_ptr = cJSON_GetErrorPtr();
@@ -59,14 +73,16 @@ void UARTHandler::processReceivedData() {
     } else {
         cJSON *commandItem = cJSON_GetObjectItemCaseSensitive(json, "type");
         if (cJSON_IsString(commandItem) && (commandItem->valuestring != NULL)) {
-            std::string type = commandItem->valuestring;
-            if(type == "info") {
-            //	utils->print("eNTERED \r\n");
-            	print("Recieved Message \r\n");
-            //	std::string data = config->getInfoList(); // Get the JSON data as a std::string
-            // 	const char* dataToSend = data.c_str(); // Obtain a pointer to the data buffer
-            // 	HAL_UART_Transmit(&huart1, reinterpret_cast<uint8_t*>(const_cast<char*>(dataToSend)), strlen(dataToSend), HAL_MAX_DELAY);
-            } else if(type == "real-time") {
+            char* type = commandItem->valuestring;
+
+            if(strcmp(type, "info") == 0) {
+            	utils->print("Message has been arrived: %s\r\n", type);
+            	std::string data = config->getInfoList(); // Get the JSON data as a std::string
+
+            	 const char* dataToSend = data.c_str(); // Obtain a pointer to the data buffer
+
+            	 HAL_UART_Transmit(&huart1, reinterpret_cast<uint8_t*>(const_cast<char*>(dataToSend)), strlen(dataToSend), HAL_MAX_DELAY);
+            } else if(strcmp(type, "info") == 0) {
 
                 // Handle "real-time" type
             } else if(type == "mqtt-setting") {

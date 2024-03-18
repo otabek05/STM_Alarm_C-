@@ -1,3 +1,0 @@
-../Core/Lib/MQTT/MQTTPacket/src/MQTTSubscribeClient.c:27:5:MQTTSerialize_subscribeLength	2
-../Core/Lib/MQTT/MQTTPacket/src/MQTTSubscribeClient.c:49:5:MQTTSerialize_subscribe	3
-../Core/Lib/MQTT/MQTTPacket/src/MQTTSubscribeClient.c:99:5:MQTTDeserialize_suback	5

@@ -148,15 +148,15 @@ int main(void)
 
  utils.init(&config);
 
- ethManager.initialize(&config, &utils);
+// ethManager.initialize(&config, &utils);
 
  config.initmqttConfig();
 
- mqttClient.init(config, &utils);
+// mqttClient.init(config, &utils);
 
- mqttClient.subscribe(config.getTopicSubscribe());
+// mqttClient.subscribe(config.getTopicSubscribe());
 
- uartHandler.init(&huart1, &config, &utils);
+ uartHandler.init(&huart1, &utils, &config);
 
 
   /* USER CODE END 2 */
@@ -171,21 +171,18 @@ int main(void)
 //	utils.createJSON(&statusJsonBuffer);
 
 //    mqttClient.publish(statusJsonBuffer, config);
-
-/*
+	 utils.print("Hello!!! \r\n");
     uartHandler.processReceivedData();
-
+/*
     std::string data = config.getInfoList(); // Get the JSON data as a std::string
 
     const char* dataToSend = data.c_str(); // Obtain a pointer to the data buffer
 
     HAL_UART_Transmit(&huart1, reinterpret_cast<uint8_t*>(const_cast<char*>(dataToSend)), strlen(dataToSend), HAL_MAX_DELAY);
 
-*/
+    */
 
-
-
-//    HAL_Delay(3000);
+    HAL_Delay(3000);
 
 
 
@@ -588,6 +585,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
     if (huart->Instance == USART1) {
+      //utils.print("Interrupt has been recieved! \r\n");
        uartHandler.onReceive();
     }
 }
