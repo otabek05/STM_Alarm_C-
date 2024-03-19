@@ -1,0 +1,13 @@
+C:\ST\STM32CubeIDE_1.14.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235\tools\arm-none-eabi\include\c++\11.3.1\arm-none-eabi\thumb\v7e-m+fp\hard\bits\gthr-default.h:229:1:int __gthread_key_delete(__gthread_key_t)	1
+../Core/Src/CplusUtils.cpp:7:1:Utils::Utils()	1
+C:\ST\STM32CubeIDE_1.14.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235\tools\bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/include/c++/11.3.1/array:95:12:std::array<std::__cxx11::basic_string<char>, 8>& std::array<std::__cxx11::basic_string<char>, 8>::operator=(const std::array<std::__cxx11::basic_string<char>, 8>&)	2
+C:\ST\STM32CubeIDE_1.14.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235\tools\bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/include/c++/11.3.1/array:95:12:std::array<std::__cxx11::basic_string<char>, 16>& std::array<std::__cxx11::basic_string<char>, 16>::operator=(const std::array<std::__cxx11::basic_string<char>, 16>&)	2
+../Core/Inc/config.h:21:7:Config& Config::operator=(const Config&)	1
+../Core/Src/CplusUtils.cpp:9:6:void Utils::init(Config*)	1
+../Core/Src/CplusUtils.cpp:41:6:)	1
+../Core/Src/CplusUtils.cpp:52:8:size_t Utils::getSwitchesCount() const	1
+../Core/Src/CplusUtils.cpp:56:6:static void Utils::playSound()	1
+../Core/Src/CplusUtils.cpp:63:6:bool Utils::switchRelay(GPIO_TypeDef*, uint16_t, int)	3
+../Core/Src/CplusUtils.cpp:74:5:int Utils::readGPIOPinState(GPIO_TypeDef*, uint16_t)	1
+../Core/Src/CplusUtils.cpp:78:6:void Utils::createJSON(std::string*)	4
+../Core/Src/CplusUtils.cpp:97:6:)	1

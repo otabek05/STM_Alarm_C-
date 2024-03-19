@@ -148,13 +148,13 @@ int main(void)
 
  utils.init(&config);
 
-// ethManager.initialize(&config, &utils);
+ ethManager.initialize(&config, &utils);
 
  config.initmqttConfig();
 
-// mqttClient.init(config, &utils);
+ mqttClient.init(config, &utils);
 
-// mqttClient.subscribe(config.getTopicSubscribe());
+ mqttClient.subscribe(config.getTopicSubscribe());
 
  uartHandler.init(&huart1, &utils, &config);
 
@@ -166,12 +166,12 @@ int main(void)
   while (true)
   {
 
-//	mqttClient.mqttYield();
+	mqttClient.mqttYield();
 
-//	utils.createJSON(&statusJsonBuffer);
+	utils.createJSON(&statusJsonBuffer);
 
-//    mqttClient.publish(statusJsonBuffer, config);
-	 utils.print("Hello!!! \r\n");
+    mqttClient.publish(statusJsonBuffer, config);
+	// utils.print("Hello!!! \r\n");
     uartHandler.processReceivedData();
 /*
     std::string data = config.getInfoList(); // Get the JSON data as a std::string

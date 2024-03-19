@@ -1,0 +1,12 @@
+../Core/Lib/Ethernet/socket.c:105:8:socket	19
+../Core/Lib/Ethernet/socket.c:197:8:close	4
+../Core/Lib/Ethernet/socket.c:240:8:listen	6
+../Core/Lib/Ethernet/socket.c:256:8:connect	12
+../Core/Lib/Ethernet/socket.c:296:8:disconnect	7
+../Core/Lib/Ethernet/socket.c:316:9:send	16
+../Core/Lib/Ethernet/socket.c:384:9:recv	14
+../Core/Lib/Ethernet/socket.c:489:9:sendto	19
+../Core/Lib/Ethernet/socket.c:593:9:recvfrom	25
+../Core/Lib/Ethernet/socket.c:775:9:ctlsocket	14
+../Core/Lib/Ethernet/socket.c:821:9:setsockopt	14
+../Core/Lib/Ethernet/socket.c:874:9:getsockopt	17

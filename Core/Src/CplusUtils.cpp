@@ -94,8 +94,19 @@ void Utils::createJSON(std::string *message) {
 }
 
 
+void print(const char* fmt, ...){
+	 char buff[256];
+	 va_list args;
+	 va_start(args, fmt);
+	 vsnprintf(buff, sizeof(buff), fmt, args);
+	 HAL_UART_Transmit(&huart1, (uint8_t*)buff, strlen(buff),
+	                      HAL_MAX_DELAY);
+	 va_end(args);
+}
 
 
+
+/*
 void print(const char* fmt, ...) {
     char formattedString[1024];
     va_list args;
@@ -133,3 +144,5 @@ void print(const char* fmt, ...) {
     cJSON_free(jsonString);
     cJSON_Delete(root);
 }
+
+*/

@@ -83,10 +83,13 @@ std::string Config::getInfoList() {
     }
 
     // Existing configurations
- //   cJSON_AddItemToObject(root, "ip", createJsonArray(ip.data(), ip.size()));
- //   cJSON_AddItemToObject(root, "gateway", createJsonArray(gateway.data(), gateway.size()));
- //   cJSON_AddItemToObject(root, "subnet", createJsonArray(subnet.data(), subnet.size()));
- //   cJSON_AddItemToObject(root, "dns", createJsonArray(dns.data(), dns.size()));
+    cJSON_AddItemToObject(root, "ip", createJsonArray(ip.data(), ip.size()));
+    cJSON_AddItemToObject(root, "gateway", createJsonArray(gateway.data(), gateway.size()));
+    cJSON_AddItemToObject(root, "subnet", createJsonArray(subnet.data(), subnet.size()));
+    cJSON_AddItemToObject(root, "dns", createJsonArray(dns.data(), dns.size()));
+
+
+    cJSON_AddItemToObject(root, "brokerIp", createJsonArray(broker_ip.data(), dns.size()));
 
     // Serialize Analog Input Names
     auto analogInputNames = getAnalogInputNames();

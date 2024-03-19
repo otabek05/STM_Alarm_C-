@@ -1,0 +1,11 @@
+../Core/Lib/DNS/dns.c:127:10:get16	1
+../Core/Lib/DNS/dns.c:136:11:put16	1
+../Core/Lib/DNS/dns.c:154:5:parse_name	9
+../Core/Lib/DNS/dns.c:215:11:dns_question	2
+../Core/Lib/DNS/dns.c:241:11:dns_answer	16
+../Core/Lib/DNS/dns.c:336:8:parseDNSMSG	13
+../Core/Lib/DNS/dns.c:414:9:dns_makequery	4
+../Core/Lib/DNS/dns.c:475:8:check_DNS_timeout	3
+../Core/Lib/DNS/dns.c:495:6:DNS_init	1
+../Core/Lib/DNS/dns.c:503:8:DNS_run	5
+../Core/Lib/DNS/dns.c:561:6:DNS_time_handler	1

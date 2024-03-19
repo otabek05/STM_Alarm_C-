@@ -1,0 +1,5 @@
+../Core/Src/CircularBuffer.cpp:4:1:CircularBuffer::CircularBuffer()	16	static
+../Core/Src/CircularBuffer.cpp:6:6:bool CircularBuffer::isFull() const	16	static
+../Core/Src/CircularBuffer.cpp:10:6:bool CircularBuffer::isEmpty() const	16	static
+../Core/Src/CircularBuffer.cpp:14:6:bool CircularBuffer::write(uint8_t)	16	static
+../Core/Src/CircularBuffer.cpp:23:6:bool CircularBuffer::read(uint8_t&)	16	static
