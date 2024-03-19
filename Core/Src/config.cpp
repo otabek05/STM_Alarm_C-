@@ -79,7 +79,7 @@ char* Config::getInfoList() {
 
 
     if (root == NULL) {
-        return "{}";
+        return "";
     }
 
     // Existing configurations
@@ -265,6 +265,18 @@ void Config:: setRelayNamesFromJson(cJSON* jsonData){
 	    }
 
 	    setDigitalOutputNames(relayList);
+}
+
+void Config::setDHCPNetworkConfig(wiz_NetInfo* net_info) {
+    std::array<uint8_t, 4> ip = {net_info->ip[0], net_info->ip[1], net_info->ip[2], net_info->ip[3]};
+    std::array<uint8_t, 4> gateway = {net_info->gw[0], net_info->gw[1], net_info->gw[2], net_info->gw[3]};
+    std::array<uint8_t, 4> subnet = {net_info->sn[0], net_info->sn[1], net_info->sn[2], net_info->sn[3]};
+    std::array<uint8_t, 4> dns = {net_info->dns[0], net_info->dns[1], net_info->dns[2], net_info->dns[3]};
+
+    setIP(ip);
+    setGateway(gateway);
+    setSubnet(subnet);
+    setDNS(dns);
 }
 
 

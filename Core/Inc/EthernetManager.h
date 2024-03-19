@@ -26,7 +26,7 @@ public:
     ~EthernetManager();
 
 
-    void initialize(const Config *conf , Utils *UtilClass );
+    void initialize( Config *conf , Utils *UtilClass );
     bool performPingTest();
     void reconnect();
 
@@ -48,7 +48,7 @@ private:
     void callbackIPAssigned();
     void callbackIPConflict();
     void initWIZCHIP();
-    void configureNetwork(const Config *conf);
+    void configureNetwork( Config *conf);
 
 
     static void W5500_Select();

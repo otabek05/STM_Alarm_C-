@@ -33,7 +33,7 @@ void EthernetManager::setIPAssiged(bool val){
 	ip_assigned = val;
 }
 
-void EthernetManager::initialize(const Config *conf, Utils *utilClass) {
+void EthernetManager::initialize( Config *conf, Utils *utilClass) {
     utils = utilClass;
     utils->playSound();
 	utils->print("Initializing Internet \r\n");
@@ -144,7 +144,7 @@ void EthernetManager::initWIZCHIP() {
 }
 
 
-void EthernetManager::configureNetwork(const Config* conf) {
+void EthernetManager::configureNetwork( Config* conf) {
 	utils->print("Initializing Netwok Configuration!!! \r\n");
     if (conf == nullptr) {
            return;
@@ -186,6 +186,8 @@ void EthernetManager::configureNetwork(const Config* conf) {
            getGWfromDHCP(net_info.gw);
            getSNfromDHCP(net_info.sn);
            getDNSfromDHCP(net_info.dns);
+
+           conf->setDHCPNetworkConfig(&net_info);
        } else {
     	   utils->print("STATIC mode has been enabled@ \r\n");
            // Static IP mode

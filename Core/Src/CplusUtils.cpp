@@ -129,7 +129,7 @@ void Utils::usartSwitch(cJSON* data) {
 
     // Validate number as a numeric value and status also; although boolean, it comes as numeric in cJSON.
     if (cJSON_IsNumber(number) && cJSON_IsBool(status)) { // Assuming status comes as a numeric representation of a boolean
-    	print("Entered Switch Function!!! \r\n");
+
         if (number->valueint >= 1 && number->valueint <= 8) {
             int arrayIndex = number->valueint - 1;
             PortAndPins targetSwitch = switches[arrayIndex];

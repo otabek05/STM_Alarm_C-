@@ -7,5 +7,5 @@ C:\ST\STM32CubeIDE_1.14.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.external
 ../Core/Src/UARTHandler.cpp:34:6:void UARTHandler::setNewDataAvailable(bool)	16	static
 ../Core/Src/UARTHandler.cpp:38:6:void UARTHandler::onReceive()	16	static
 ../Core/Src/UARTHandler.cpp:62:6:void UARTHandler::processReceivedData()	48	static
-../Core/Src/UARTHandler.cpp:139:6:void UARTHandler::SendRealTimeData(std::string*)	24	static
-../Core/Src/UARTHandler.cpp:150:6:void UARTHandler::handleError(HAL_StatusTypeDef)	16	static
+../Core/Src/UARTHandler.cpp:144:6:void UARTHandler::SendRealTimeData(std::string*)	24	static
+../Core/Src/UARTHandler.cpp:155:6:void UARTHandler::handleError(HAL_StatusTypeDef)	16	static

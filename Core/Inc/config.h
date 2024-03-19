@@ -13,6 +13,7 @@ extern "C" {
 #include "string.h"
 #include "cJSON.h"
 
+
 }
 constexpr size_t MAX_ANALOG_INPUTS = 8;
 constexpr size_t MAX_DIGITAL_INPUTS = 16;
@@ -24,10 +25,10 @@ public:
     // Getters
     std::array<uint8_t, 4> getBrokerIP() const;
     uint16_t getBrokerPort() const;
-    std::array<uint8_t, 4> getIP() const;
-    std::array<uint8_t, 4> getGateway() const;
+    std::array<uint8_t, 4> getIP()const ;
+    std::array<uint8_t, 4> getGateway()const;
     std::array<uint8_t, 4> getSubnet() const;
-    std::array<uint8_t, 4> getDNS() const;
+    std::array<uint8_t, 4> getDNS() const ;
     uint16_t getKeepAliveInterval() const;
     bool getDHCPEnabled() const;
     uint32_t getIntervalTime() const;
@@ -76,7 +77,7 @@ public:
     void setDigitalInputNamesFromJson(cJSON* jsonData);
     void setRelayNamesFromJson(cJSON* jsonData);
 
-
+    void setDHCPNetworkConfig(wiz_NetInfo* net_info) ;
 
 
 private:

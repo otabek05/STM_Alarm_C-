@@ -83,6 +83,7 @@ void UARTHandler::processReceivedData() {
                     break;
                 }
                 case REAL_TIME_TYPE: {
+                	utils->playSound();
                 	 if (cJSON_IsBool(item)) {
                        bool status = cJSON_IsTrue(item) ? true : false;
             	       setRealTimeData(status);
@@ -90,21 +91,25 @@ void UARTHandler::processReceivedData() {
                 	break;
                 }
                 case MQTT_SETTING_TYPE: {
+                	utils->playSound();
                 	config->setMQTTBroker(item);
                 	utils->print("MQTT config has been arrived!!! \r\n");
                     break;
                 }
                 case NETWORK_SETTING_TYPE :{
                 	config->setNetworkSettings(item);
+                	utils->playSound();
                 	utils->print("Netwokr Settings has been successfully configured \r\n");
                     break;
                 }
                 case ANALOG_NAME: {
+                	utils->playSound();
                 	config->setAnalogInputNamesFromJson(json);
                     utils->print("Analog Names has been arrived!!! \r\n");
                     break;
                 }
                 case DIGITAL_NAME: {
+                	utils->playSound();
                 	config->setDigitalInputNamesFromJson(json);
                 	utils->print("Digital Names has been arrived!!! \r\n");
                 	break;

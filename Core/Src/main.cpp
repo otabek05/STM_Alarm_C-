@@ -175,7 +175,6 @@ int main(void)
     uartHandler.processReceivedData();
 
     if (uartHandler.getRealTimeData()) {
-    	utils.print("Keep sending real time data  \r\n");
     	uartHandler.SendRealTimeData(&statusJsonUSARTBuffer);
     }
 /*
