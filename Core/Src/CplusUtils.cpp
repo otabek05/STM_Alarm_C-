@@ -93,6 +93,58 @@ void Utils::createJSON(std::string *message) {
 	    cJSON_Delete(statusJson); // Clean up the cJSON object
 }
 
+void Utils::createUSARTJson(std::string *message) {
+	 cJSON* rootJson = cJSON_CreateObject();
+	 cJSON* outputsArray = cJSON_CreateArray();
+	 cJSON* inputsArray = cJSON_CreateArray();
+
+	    for (int i = 0; i < 8; i++) {
+	        int status = readGPIOPinState(switches[i].port, switches[i].pin);
+	        cJSON_AddItemToArray(outputsArray, cJSON_CreateBool(status));
+	    }
+
+	    for (int i = 0; i < 16; i++) {
+	        int status = readGPIOPinState(digitalInputs[i].port, digitalInputs[i].pin);
+	        cJSON_AddItemToArray(inputsArray, cJSON_CreateBool(status));
+	    }
+
+	    cJSON_AddItemToObject(rootJson, "type", cJSON_CreateString("realTime"));
+	    cJSON_AddItemToObject(rootJson, "di", inputsArray);
+	    cJSON_AddItemToObject(rootJson, "relay", outputsArray);
+
+	    char* json_string = cJSON_Print(rootJson);
+	    if (json_string != nullptr) {
+	        *message = json_string;
+	        free(json_string); // Remember to free the allocated memory
+	    }
+
+	    cJSON_Delete(rootJson);
+}
+
+void Utils::usartSwitch(cJSON* data) {
+    const cJSON *number = cJSON_GetObjectItemCaseSensitive(data, "number");
+    // Directly getting the status as expected to be true/false (1/0)
+    const cJSON *status = cJSON_GetObjectItemCaseSensitive(data, "status");
+
+
+    // Validate number as a numeric value and status also; although boolean, it comes as numeric in cJSON.
+    if (cJSON_IsNumber(number) && cJSON_IsBool(status)) { // Assuming status comes as a numeric representation of a boolean
+    	print("Entered Switch Function!!! \r\n");
+        if (number->valueint >= 1 && number->valueint <= 8) {
+            int arrayIndex = number->valueint - 1;
+            PortAndPins targetSwitch = switches[arrayIndex];
+
+            bool success = switchRelay(targetSwitch.port, targetSwitch.pin, status->valueint);
+            if (success) {
+                print("The %d switch has been toggled.\r\n", number->valueint);
+            } else {
+                print("There is an issue with switch \r\n");
+            }
+        }
+    }
+}
+
+
 
 void print(const char* fmt, ...){
 	 char buff[256];

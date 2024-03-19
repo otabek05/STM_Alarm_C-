@@ -28,6 +28,7 @@ extern UART_HandleTypeDef huart1;
 
 #define MAX_PAYLOAD_LEN 1024
 
+class Config;
 
 class PortAndPins {
 public:
@@ -45,14 +46,17 @@ class Utils {
 public:
     Utils();
 
-    Config conf;
 
     void init(Config* config);
     void createJSON(std::string *message);
+
+    void createUSARTJson(std::string *message);
     bool switchRelay(GPIO_TypeDef* port, uint16_t switchPin, int status);
     static void playSound();
     static void print(const char* fmt, ...);
+    void usartSwitch(cJSON* data);
 
+    Config conf;
     size_t getSwitchesCount() const;
     PortAndPins switches[8];
     PortAndPins digitalInputs[16];

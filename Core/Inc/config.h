@@ -66,7 +66,19 @@ public:
     std::string getDigitalOutputName(int index);
     void init();
     void initmqttConfig();
-    std::string getInfoList();
+    char* getInfoList();
+    std::array<uint8_t, 4> extractIPAddress(cJSON* parent, const char* name);
+
+    void setNetworkSettings(cJSON *data);
+    void setMQTTBroker(cJSON* data);
+
+    void setAnalogInputNamesFromJson(cJSON* jsonData);
+    void setDigitalInputNamesFromJson(cJSON* jsonData);
+    void setRelayNamesFromJson(cJSON* jsonData);
+
+
+
+
 private:
     // Member variables
     std::array<uint8_t, 4> broker_ip;
@@ -87,6 +99,7 @@ private:
     std::array<std::string, MAX_ANALOG_INPUTS> analog_input_names;
     std::array<std::string, MAX_DIGITAL_INPUTS> digital_input_names;
     std::array<std::string, MAX_DIGITAL_OUTPUTS> digital_output_names;
+
 };
 
 

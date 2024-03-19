@@ -13,10 +13,10 @@ extern "C" {
 #define REAL_TIME_TYPE 2
 #define MQTT_SETTING_TYPE 3
 #define NETWORK_SETTING_TYPE 4
-#define ANALOG_NAME_TYPE 5
-#define DIGITAL_NAME_TYPE 6
-#define RELAY_NAME_TYPE 7
-#define RELAY_SWITCH_TYPE 8
+#define ANALOG_NAME 5
+#define DIGITAL_NAME 6
+#define RELAY_NAME 7
+#define RELAY_SWITCH 8
 
 
 
@@ -33,7 +33,7 @@ public:
     void processReceivedData();
     void init(UART_HandleTypeDef* uartHandle,Utils* utilsInstance, Config* configInstance); // Initialization function
     void handleError(HAL_StatusTypeDef status);
-
+    void SendRealTimeData(std::string* data );
 
     // Setters
     void setRealTimeData(bool requested);
@@ -43,6 +43,7 @@ public:
     //Getters
     bool isNewMessageArrived();
     bool getRealTimeData();
+
 
 private:
     UART_HandleTypeDef* huart;

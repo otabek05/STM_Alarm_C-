@@ -73,7 +73,7 @@ UARTHandler uartHandler;
 
 volatile int timeValue;
 static std::string statusJsonBuffer;
-
+static std::string statusJsonUSARTBuffer;
 
 
 /* USER CODE END PV */
@@ -173,6 +173,11 @@ int main(void)
     mqttClient.publish(statusJsonBuffer, config);
 	// utils.print("Hello!!! \r\n");
     uartHandler.processReceivedData();
+
+    if (uartHandler.getRealTimeData()) {
+    	utils.print("Keep sending real time data  \r\n");
+    	uartHandler.SendRealTimeData(&statusJsonUSARTBuffer);
+    }
 /*
     std::string data = config.getInfoList(); // Get the JSON data as a std::string
 

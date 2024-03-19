@@ -74,9 +74,9 @@ cJSON *createJsonArray(const uint8_t arr[], size_t len) {
    }
 
 
-std::string Config::getInfoList() {
+char* Config::getInfoList() {
     cJSON *root = cJSON_CreateObject();
-    std::string serializedDataStr;
+
 
     if (root == NULL) {
         return "{}";
@@ -116,19 +116,156 @@ std::string Config::getInfoList() {
     cJSON_AddItemToObject(root, "type", cJSON_CreateString("info"));
     cJSON_AddItemToObject(root, "relay", digitalOutputsArray);
     cJSON_AddItemToObject(root, "mac", cJSON_CreateString(getClientId().c_str()));
+    cJSON_AddItemToObject(root, "port", cJSON_CreateNumber(getBrokerPort()));
     cJSON_AddItemToObject(root, "net-status", cJSON_CreateBool(getDHCPEnabled()));
 
     // Serialize JSON to string
     char *serializedData = cJSON_Print(root);
     if (serializedData != NULL) {
-        serializedDataStr = serializedData;
-        free(serializedData);
+
     }
 
     cJSON_Delete(root);
-    return serializedDataStr;
+    return serializedData;
+
 }
 
+std::array<uint8_t, 4> Config::extractIPAddress(cJSON* parent, const char* name) {
+    std::array<uint8_t, 4> addressArray{};
+    cJSON* item = cJSON_GetObjectItemCaseSensitive(parent, name);
+    if (cJSON_IsArray(item)) {
+        for (int i = 0; i < 4; ++i) {
+            cJSON* byteItem = cJSON_GetArrayItem(item, i);
+            if (cJSON_IsNumber(byteItem)) {
+                addressArray[i] = static_cast<uint8_t>(byteItem->valueint);
+            }
+        }
+    }
+    return addressArray;
+}
+
+
+
+void Config::setNetworkSettings(cJSON* data) {
+    cJSON* statusJson = cJSON_GetObjectItemCaseSensitive(data, "status");
+    if (cJSON_IsBool(statusJson)) {
+    	 bool status = cJSON_IsTrue(statusJson) ? true : false;
+       // bool status = cJSON_IsTrue(statusJson);
+
+
+        if (!status) {
+            setIP(extractIPAddress(data, "ip"));
+            setGateway(extractIPAddress(data, "gateway"));
+            setSubnet(extractIPAddress(data, "subnet"));
+            setDNS(extractIPAddress(data, "dns"));
+        }
+
+        setDHCPEnabled(status);
+    }
+}
+
+
+void Config::setMQTTBroker(cJSON* data) {
+	if (data == nullptr) return;
+	cJSON* numItem = cJSON_GetObjectItemCaseSensitive(data, "port");
+	        if (cJSON_IsNumber(numItem)) {
+	            int number = numItem->valueint;
+	            setBrokerPort(number);
+	            setBrokerIP(extractIPAddress(data, "broker_ip"));
+	  }
+
+}
+
+
+
+void Config::setAnalogInputNamesFromJson(cJSON* jsonData) {
+    if (jsonData == nullptr) {
+        return; // Input is null, handle error as needed
+    }
+
+    cJSON* analogInputsJson = cJSON_GetObjectItemCaseSensitive(jsonData, "data");
+    if (!cJSON_IsArray(analogInputsJson)) {
+        return; // Not an array, handle error as needed
+    }
+
+    std::array<std::string, MAX_ANALOG_INPUTS> analogInputs;
+    size_t index = 0;
+    cJSON* analogInputJson;
+
+    // Iterate over the analog input names array
+    cJSON_ArrayForEach(analogInputJson, analogInputsJson) {
+        if (cJSON_IsString(analogInputJson) && (analogInputJson->valuestring != NULL)) {
+            if (index < MAX_ANALOG_INPUTS) {
+                analogInputs[index] = std::string(analogInputJson->valuestring);
+                ++index;
+            } else {
+                break; // More items in the list than MAX_ANALOG_INPUTS, handle as needed
+            }
+        }
+    }
+
+    setAnalogInputNames(analogInputs);
+}
+
+
+void Config::setDigitalInputNamesFromJson(cJSON* jsonData) {
+    if (jsonData == nullptr) {
+        return; // Input is null, handle error as needed
+    }
+
+    cJSON* digitalInputsJson = cJSON_GetObjectItemCaseSensitive(jsonData, "data");
+    if (!cJSON_IsArray(digitalInputsJson)) {
+        return; // Not an array, handle error as needed
+    }
+
+    std::array<std::string, MAX_DIGITAL_INPUTS> digitalInputs;
+    size_t index = 0;
+    cJSON* digitalInputJson;
+
+    // Iterate over the analog input names array
+    cJSON_ArrayForEach(digitalInputJson, digitalInputsJson) {
+        if (cJSON_IsString(digitalInputJson) && (digitalInputJson->valuestring != NULL)) {
+            if (index < MAX_DIGITAL_INPUTS) {
+                digitalInputs[index] = std::string(digitalInputJson->valuestring);
+                ++index;
+            } else {
+                break; // More items in the list than MAX_ANALOG_INPUTS, handle as needed
+            }
+        }
+    }
+
+    setDigitalInputNames(digitalInputs);
+}
+
+
+void Config:: setRelayNamesFromJson(cJSON* jsonData){
+	 if (jsonData == nullptr) {
+	        return; // Input is null, handle error as needed
+	    }
+
+	    cJSON* JsonData = cJSON_GetObjectItemCaseSensitive(jsonData, "data");
+	    if (!cJSON_IsArray(JsonData)) {
+	        return; // Not an array, handle error as needed
+	    }
+
+	    std::array<std::string, MAX_DIGITAL_OUTPUTS> relayList;
+	    size_t index = 0;
+	    cJSON* Json;
+
+	    // Iterate over the analog input names array
+	    cJSON_ArrayForEach(Json, JsonData) {
+	        if (cJSON_IsString(Json) && (Json->valuestring != NULL)) {
+	            if (index < MAX_DIGITAL_OUTPUTS) {
+	                relayList[index] = std::string(Json->valuestring);
+	                ++index;
+	            } else {
+	                break; // More items in the list than MAX_ANALOG_INPUTS, handle as needed
+	            }
+	        }
+	    }
+
+	    setDigitalOutputNames(relayList);
+}
 
 
 // Getters

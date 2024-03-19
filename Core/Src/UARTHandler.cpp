@@ -15,21 +15,16 @@ void UARTHandler::init(UART_HandleTypeDef* uartHandle, Utils* utilsInstance, Con
     HAL_StatusTypeDef result = HAL_UART_Receive_IT(huart, &rxByte, 1);
 
     if(result != HAL_OK) {
-        // Error handling
-        if(result == HAL_ERROR) {
-            print("UART Receive_IT Error: HAL_ERROR\r\n");
-        } else if(result == HAL_BUSY) {
-            print("UART Receive_IT Error: HAL_BUSY\r\n");
-        } else if(result == HAL_TIMEOUT) {
-            print("UART Receive_IT Error: HAL_TIMEOUT\r\n");
-        } else {
-            print("UART Receive_IT Error: Unknown Error Code %d\r\n", result);
-        }
+
     }
 }
 
 void UARTHandler::setRealTimeData(bool requested){
+     realTimeData = requested;
+}
 
+bool UARTHandler::getRealTimeData(){
+	return realTimeData;
 }
 
 bool UARTHandler::isNewMessageArrived() {
@@ -74,6 +69,7 @@ void UARTHandler::processReceivedData() {
         }
     } else {
         cJSON *commandItem = cJSON_GetObjectItemCaseSensitive(json, "type");
+        cJSON *item = cJSON_GetObjectItemCaseSensitive(json, "data");
         if (cJSON_IsNumber(commandItem)) {
             int type = commandItem->valueint;
 
@@ -81,30 +77,48 @@ void UARTHandler::processReceivedData() {
                 case INFO_TYPE: {
                     utils->print("Message has been arrived: %d\r\n", type);
                     // Scope introduced for INFO_TYPE case
-                    std::string data = config->getInfoList();
-                    const char* dataToSend = data.c_str();
-                    HAL_UART_Transmit(&huart1, reinterpret_cast<uint8_t*>(const_cast<char*>(dataToSend)), strlen(dataToSend), HAL_MAX_DELAY);
+                    char* data = config->getInfoList();
+                 //   const char* dataToSend = data.c_str();
+                    HAL_UART_Transmit(&huart1, reinterpret_cast<uint8_t*>(const_cast<char*>(data)), strlen(data), HAL_MAX_DELAY);
                     break;
                 }
                 case REAL_TIME_TYPE: {
-                    // Scope for REAL_TIME_TYPE case
-                    // Real-time handling code here
-                    break;
+                	 if (cJSON_IsBool(item)) {
+                       bool status = cJSON_IsTrue(item) ? true : false;
+            	       setRealTimeData(status);
+                	 }
+                	break;
                 }
                 case MQTT_SETTING_TYPE: {
-                    // Scope for MQTT_SETTING_TYPE case
-                    // MQTT setting handling code here
+                	config->setMQTTBroker(item);
+                	utils->print("MQTT config has been arrived!!! \r\n");
                     break;
                 }
-                case NETWORK_SETTING_TYPE: {
-                    // Scope for NETWORK_SETTING_TYPE case
-                    // Network setting handling code here
+                case NETWORK_SETTING_TYPE :{
+                	config->setNetworkSettings(item);
+                	utils->print("Netwokr Settings has been successfully configured \r\n");
                     break;
                 }
-                case ANALOG_NAME_TYPE: {
-                    // Scope for ANALOG_NAME_TYPE case
-                    // Analog name handling code here
+                case ANALOG_NAME: {
+                	config->setAnalogInputNamesFromJson(json);
+                    utils->print("Analog Names has been arrived!!! \r\n");
                     break;
+                }
+                case DIGITAL_NAME: {
+                	config->setDigitalInputNamesFromJson(json);
+                	utils->print("Digital Names has been arrived!!! \r\n");
+                	break;
+                }
+                case RELAY_NAME: {
+                	config->setRelayNamesFromJson(json);
+                	utils->print("Relay Names has been arrived!!! \r\n");
+                	break;
+                }
+
+                case RELAY_SWITCH: {
+                	utils->usartSwitch(item);
+                	utils->print("Relay Switch has been arrived \r\n");
+                	break;
                 }
                 // Continue for other cases, each in its own scope if needed
                 default: {
@@ -119,6 +133,16 @@ void UARTHandler::processReceivedData() {
     setNewDataAvailable(false); // Reset the flag after processing
     memset(receiveBuffer, 0, bufferIndex); // Clear the buffer
     bufferIndex = 0; // Ready for new data
+}
+
+
+void UARTHandler:: SendRealTimeData(std::string* data ){
+
+    utils->createUSARTJson(data);
+    const char* serializedData = data->c_str();
+
+   HAL_UART_Transmit(&huart1, reinterpret_cast<uint8_t*>(const_cast<char*>(serializedData)), strlen(serializedData), HAL_MAX_DELAY);
+
 }
 
 
