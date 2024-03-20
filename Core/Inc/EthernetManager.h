@@ -1,7 +1,7 @@
 #ifndef ETHERNETMANAGER_H
 #define ETHERNETMANAGER_H
 #include "main.h"
-#include "CplusUtils.h"
+#include "utils.h"
 #include <cstdint>
 #include <array>
 #include "config.h"

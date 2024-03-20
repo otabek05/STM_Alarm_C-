@@ -1,13 +1,18 @@
-#include "CplusUtils.h"
+
+#include "utils.h"
+#include <cmath>
 
 
-void printdata(const char* fmt, ...);
+Utils* Utils::instance = nullptr;
 
+Utils::Utils(){
+	Utils::instance = this;
+}
 
-Utils::Utils(){}
+void Utils::init(Config* config, MuxSelect* muxInstance){
+	mux = muxInstance;
+	conf = config;
 
-void Utils::init(Config* config){
-	conf = *config;
 
 	switches[0] = {GPIOE, GPIO_PIN_12}; // switch1
 	switches[1] = {GPIOE, GPIO_PIN_13}; // switch2
@@ -39,6 +44,7 @@ void Utils::init(Config* config){
 
 }
 void Utils::print(const char* fmt, ...){
+
 	 char buff[256];
 	 va_list args;
 	 va_start(args, fmt);
@@ -46,6 +52,7 @@ void Utils::print(const char* fmt, ...){
 	 HAL_UART_Transmit(&huart1, (uint8_t*)buff, strlen(buff),
 	                      HAL_MAX_DELAY);
 	 va_end(args);
+
 }
 
 
@@ -72,25 +79,57 @@ bool Utils::switchRelay(GPIO_TypeDef* port, uint16_t switchPin, int status){
 }
 
 int Utils::readGPIOPinState(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin){
-	return HAL_GPIO_ReadPin(GPIOx, GPIO_Pin) == GPIO_PIN_SET ? 0 : 1;
+	return HAL_GPIO_ReadPin(GPIOx, GPIO_Pin) == GPIO_PIN_RESET ? 0 : 1;
 }
 
+
 void Utils::createJSON(std::string *message) {
-	   cJSON *statusJson = cJSON_CreateObject();
-	    for (int i = 0; i < 8; i++) {
-	        int status = readGPIOPinState(switches[i].port, switches[i].pin);
-	        cJSON_AddNumberToObject(statusJson, conf.getDigitalOutputName(i).c_str(), status);
-	    }
-	    for (int i = 0; i < 16; i++) {
-	        int status = readGPIOPinState(digitalInputs[i].port, digitalInputs[i].pin);
-	        cJSON_AddNumberToObject(statusJson, conf.getDigitalInputName(i).c_str(), status);
-	    }
-	    char* json_string = cJSON_Print(statusJson);
-	    if (json_string != nullptr) {
-	        *message = json_string;
-	        free(json_string); // Free the allocated memory
-	    }
-	    cJSON_Delete(statusJson); // Clean up the cJSON object
+    cJSON *root = cJSON_CreateObject();
+    cJSON *aiArray = cJSON_CreateArray();
+    cJSON *diArray = cJSON_CreateArray();
+    cJSON *doArray = cJSON_CreateArray();
+
+    AnalogReadings analogValue = mux->SwitchAnalog();
+    for (int i = 0; i < 8; i++) {
+        cJSON *obj = cJSON_CreateObject();
+        int status = readGPIOPinState(switches[i].port, switches[i].pin);
+        cJSON_AddNumberToObject(obj, conf->getDigitalOutputName(i).c_str(), status);
+        cJSON_AddItemToArray(doArray, obj);
+    }
+
+    for (int i = 0; i < 16; i++) {
+        cJSON *obj = cJSON_CreateObject();
+        int status = readGPIOPinState(digitalInputs[i].port, digitalInputs[i].pin);
+        cJSON_AddNumberToObject(obj, conf->getDigitalInputName(i).c_str(), status);
+        cJSON_AddItemToArray(diArray, obj);
+    }
+
+
+    for (int i = 0; i < 8; i++) {
+        cJSON *obj = cJSON_CreateObject();
+        float status = analogValue.values[i]; // Placeholder, adjust according to your implementation
+        char formattedStatus[32]; // Buffer to hold the formatted float string
+
+        snprintf(formattedStatus, sizeof(formattedStatus), "%.2f", status);
+        print("Analog Float: %s  AnalogNumber: %d\r\n", formattedStatus, i);
+
+        // Add the formatted string to the JSON object
+        cJSON_AddStringToObject(obj, conf->getAnalogInputName(i).c_str(), formattedStatus);
+        cJSON_AddItemToArray(aiArray, obj);
+    }
+
+    cJSON_AddItemToObject(root, "ai", aiArray);
+    cJSON_AddItemToObject(root, "di", diArray);
+    cJSON_AddItemToObject(root, "do", doArray);
+    cJSON_AddStringToObject(root, "mac", conf->getClientId().c_str());
+
+    // Print and assign the JSON string
+    char* json_string = cJSON_Print(root);
+    if (json_string != nullptr) {
+        *message = json_string;
+        free(json_string); // Free the allocated memory
+    }
+    cJSON_Delete(root); // Clean up the cJSON object
 }
 
 void Utils::createUSARTJson(std::string *message) {
@@ -144,7 +183,7 @@ void Utils::usartSwitch(cJSON* data) {
     }
 }
 
-
+/*
 
 void print(const char* fmt, ...){
 	 char buff[256];
@@ -155,6 +194,8 @@ void print(const char* fmt, ...){
 	                      HAL_MAX_DELAY);
 	 va_end(args);
 }
+
+*/
 
 
 

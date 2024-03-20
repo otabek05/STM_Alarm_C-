@@ -65,6 +65,12 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define MUX1_Pin GPIO_PIN_4
+#define MUX1_GPIO_Port GPIOE
+#define MUX2_Pin GPIO_PIN_5
+#define MUX2_GPIO_Port GPIOE
+#define MUX3_Pin GPIO_PIN_6
+#define MUX3_GPIO_Port GPIOE
 #define DI1_Pin GPIO_PIN_0
 #define DI1_GPIO_Port GPIOC
 #define DI2_Pin GPIO_PIN_1

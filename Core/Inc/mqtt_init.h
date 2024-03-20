@@ -9,8 +9,7 @@ extern "C" {
 }
 
 
-
-#include "CplusUtils.h"
+#include "utils.h"
 #include "config.h"
 
 class Utils;

@@ -1,5 +1,5 @@
-#ifndef INC_CPLUSUTILS_H_
-#define INC_CPLUSUTILS_H_
+#ifndef INC_UTILS_H_
+#define INC_UTILS_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -25,11 +25,13 @@ extern UART_HandleTypeDef huart1;
 #include <array>
 #include <string>
 #include "config.h"
+#include "MuxSelect.h"
+
 
 #define MAX_PAYLOAD_LEN 1024
 
 class Config;
-
+class MuxSelect;
 class PortAndPins {
 public:
     GPIO_TypeDef* port;
@@ -47,7 +49,7 @@ public:
     Utils();
 
 
-    void init(Config* config);
+    void init(Config* configInstance, MuxSelect* muxInstance);
     void createJSON(std::string *message);
 
     void createUSARTJson(std::string *message);
@@ -56,7 +58,8 @@ public:
     static void print(const char* fmt, ...);
     void usartSwitch(cJSON* data);
 
-    Config conf;
+    Config* conf;
+    MuxSelect* mux;
     size_t getSwitchesCount() const;
     PortAndPins switches[8];
     PortAndPins digitalInputs[16];
@@ -64,11 +67,12 @@ public:
 
 private:
     int readGPIOPinState(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
+    static Utils* instance;
 
 };
 
-void print(const char* fmt, ...);
+//void print(const char* fmt, ...);
 
 #endif // __cplusplus
 
-#endif /* INC_CPLUSUTILS_H_ */
+#endif /* INC_UTILS_H_ */

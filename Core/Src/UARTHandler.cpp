@@ -1,5 +1,4 @@
 #include "UARTHandler.h"
-#include "CplusUtils.h"
 #include <cstring> // For memset and memcpy
 #include <array>
 #include <string>
@@ -12,6 +11,7 @@ void UARTHandler::init(UART_HandleTypeDef* uartHandle, Utils* utilsInstance, Con
     huart = uartHandle;
     utils = utilsInstance;
     config = configInstance;
+
     HAL_StatusTypeDef result = HAL_UART_Receive_IT(huart, &rxByte, 1);
 
     if(result != HAL_OK) {
@@ -50,7 +50,7 @@ void UARTHandler::onReceive() {
         }
     } else {
         // Handle buffer overflow
-        print("Buffer overflow \r\n");
+      //  print("Buffer overflow \r\n");
         bufferIndex = 0; // Reset buffer index
     }
 
@@ -75,12 +75,10 @@ void UARTHandler::processReceivedData() {
 
             switch(type) {
                 case INFO_TYPE: {
-                    utils->print("Message has been arrived: %d\r\n", type);
-                    // Scope introduced for INFO_TYPE case
-                    char* data = config->getInfoList();
-                 //   const char* dataToSend = data.c_str();
-                    HAL_UART_Transmit(&huart1, reinterpret_cast<uint8_t*>(const_cast<char*>(data)), strlen(data), HAL_MAX_DELAY);
-                    break;
+                	 utils->print("Message has been arrived: %d\r\n", type);
+                	    char* data = config->getInfoList();
+                	    size_t data_len = strlen(data);
+                	    HAL_UART_Transmit(&huart1, reinterpret_cast<uint8_t*>(data), data_len, HAL_MAX_DELAY); // +1 for the added "\r"
                 }
                 case REAL_TIME_TYPE: {
                 	utils->playSound();
@@ -125,7 +123,6 @@ void UARTHandler::processReceivedData() {
                 	utils->print("Relay Switch has been arrived \r\n");
                 	break;
                 }
-                // Continue for other cases, each in its own scope if needed
                 default: {
                     // Handle unknown type
                     break;
@@ -141,19 +138,21 @@ void UARTHandler::processReceivedData() {
 }
 
 
-void UARTHandler:: SendRealTimeData(std::string* data ){
+void UARTHandler::SendRealTimeData(std::string* data) {
+
 
     utils->createUSARTJson(data);
+    // Append "\r" to the end of the data
+    *data += "\r";
     const char* serializedData = data->c_str();
-
-   HAL_UART_Transmit(&huart1, reinterpret_cast<uint8_t*>(const_cast<char*>(serializedData)), strlen(serializedData), HAL_MAX_DELAY);
+    HAL_UART_Transmit(&huart1, reinterpret_cast<uint8_t*>(const_cast<char*>(serializedData)), strlen(serializedData), HAL_MAX_DELAY);
 
 }
 
 
 
 void UARTHandler::handleError(HAL_StatusTypeDef status) {
-    print("UART Receive Error: %d\r\n", status);
+// print("UART Receive Error: %d\r\n", status);
     // Consider resetting UART reception here to recover from errors
 }
 

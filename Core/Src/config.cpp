@@ -77,10 +77,13 @@ cJSON *createJsonArray(const uint8_t arr[], size_t len) {
 char* Config::getInfoList() {
     cJSON *root = cJSON_CreateObject();
 
-
     if (root == NULL) {
-        return "";
-    }
+           char* emptyString = static_cast<char*>(malloc(1)); // Allocate memory for an empty string
+           if (emptyString != nullptr) {
+               *emptyString = '\0'; // Ensure it's a valid empty string
+           }
+           return emptyString; // Return an allocated empty string to keep memory management consistent
+       }
 
     // Existing configurations
     cJSON_AddItemToObject(root, "ip", createJsonArray(ip.data(), ip.size()));
@@ -119,14 +122,23 @@ char* Config::getInfoList() {
     cJSON_AddItemToObject(root, "port", cJSON_CreateNumber(getBrokerPort()));
     cJSON_AddItemToObject(root, "net-status", cJSON_CreateBool(getDHCPEnabled()));
 
-    // Serialize JSON to string
-    char *serializedData = cJSON_Print(root);
-    if (serializedData != NULL) {
+    char* serializedData = cJSON_Print(root);
+       cJSON_Delete(root); // Delete the cJSON object as it's no longer needed
 
-    }
+       if (serializedData == NULL) {
+           return NULL; // Handle cJSON_Print failure
+       }
+       size_t newDataSize = strlen(serializedData) + 2; // +2 for "\r" and "\0"
+       char* sendData = static_cast<char*>(malloc(newDataSize));
 
-    cJSON_Delete(root);
-    return serializedData;
+       if (sendData == NULL) {
+           free(serializedData); // Don't forget to free the original data if memory allocation fails
+           return NULL; // Handle memory allocation failure
+       }
+       strcpy(sendData, serializedData);
+       strcat(sendData, "\r");
+       free(serializedData); // Free the original serialized data as it's no longer needed
+       return sendData;
 
 }
 

@@ -58,7 +58,7 @@ bool MQTTConnection::publish(const std::string& message, Config config) {
         return false;
     }
 
-     utils->print("Message published successfully.\r\n");
+   //  utils->print("Message published successfully.\r\n");
     return true;
 }
 
@@ -72,13 +72,11 @@ void MQTTConnection::subscribe(std::string topic) {
 }
 
 void MQTTConnection::handleMessage(MessageData* data) {
-	print("Message has been arrived !!! \r\n");
+//	print("Message has been arrived !!! \r\n");
 	 if (MQTTConnection::instance) {
            MQTTConnection::instance->handleIncomingMessage(data);
 	  }
 }
-
-
 
 MQTTConnection::~MQTTConnection() {
     // Clean up resources, if necessary
