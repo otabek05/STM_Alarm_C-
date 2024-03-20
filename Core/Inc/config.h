@@ -31,6 +31,7 @@ public:
     std::array<uint8_t, 4> getDNS() const ;
     uint16_t getKeepAliveInterval() const;
     bool getDHCPEnabled() const;
+    bool getIpAssigned() const;
     uint32_t getIntervalTime() const;
     std::string getUsername() const;
     std::string getClientId() const;
@@ -51,6 +52,7 @@ public:
     void setDNS(const std::array<uint8_t, 4>& value);
     void setKeepAliveInterval(uint16_t value);
     void setDHCPEnabled(bool value);
+    void setIpAssigned(bool value);
     void setIntervalTime(uint32_t value);
     void setUsername(const std::string& value);
     void setClientId(const std::string& value);
@@ -90,6 +92,7 @@ private:
     std::array<uint8_t, 4> dns;
     uint16_t keep_alive_interval;
     bool dhcp_enabled;
+    bool ip_assigned = false;
     uint32_t interval_time;
     std::string username;
     std::string clientId;

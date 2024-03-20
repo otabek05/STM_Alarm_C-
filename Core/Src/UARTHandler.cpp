@@ -75,7 +75,7 @@ void UARTHandler::processReceivedData() {
 
             switch(type) {
                 case INFO_TYPE: {
-                	 utils->print("Message has been arrived: %d\r\n", type);
+                //	 utils->print("Message has been arrived: %d\r\n", type);
                 	    char* data = config->getInfoList();
                 	    size_t data_len = strlen(data);
                 	    HAL_UART_Transmit(&huart1, reinterpret_cast<uint8_t*>(data), data_len, HAL_MAX_DELAY); // +1 for the added "\r"
@@ -91,36 +91,36 @@ void UARTHandler::processReceivedData() {
                 case MQTT_SETTING_TYPE: {
                 	utils->playSound();
                 	config->setMQTTBroker(item);
-                	utils->print("MQTT config has been arrived!!! \r\n");
+                //	utils->print("MQTT config has been arrived!!! \r\n");
                     break;
                 }
                 case NETWORK_SETTING_TYPE :{
                 	config->setNetworkSettings(item);
                 	utils->playSound();
-                	utils->print("Netwokr Settings has been successfully configured \r\n");
+                //	utils->print("Netwokr Settings has been successfully configured \r\n");
                     break;
                 }
                 case ANALOG_NAME: {
                 	utils->playSound();
                 	config->setAnalogInputNamesFromJson(json);
-                    utils->print("Analog Names has been arrived!!! \r\n");
+                //    utils->print("Analog Names has been arrived!!! \r\n");
                     break;
                 }
                 case DIGITAL_NAME: {
                 	utils->playSound();
                 	config->setDigitalInputNamesFromJson(json);
-                	utils->print("Digital Names has been arrived!!! \r\n");
+            //    	utils->print("Digital Names has been arrived!!! \r\n");
                 	break;
                 }
                 case RELAY_NAME: {
                 	config->setRelayNamesFromJson(json);
-                	utils->print("Relay Names has been arrived!!! \r\n");
+            //    	utils->print("Relay Names has been arrived!!! \r\n");
                 	break;
                 }
 
                 case RELAY_SWITCH: {
                 	utils->usartSwitch(item);
-                	utils->print("Relay Switch has been arrived \r\n");
+              //  	utils->print("Relay Switch has been arrived \r\n");
                 	break;
                 }
                 default: {
@@ -142,8 +142,6 @@ void UARTHandler::SendRealTimeData(std::string* data) {
 
 
     utils->createUSARTJson(data);
-    // Append "\r" to the end of the data
-    *data += "\r";
     const char* serializedData = data->c_str();
     HAL_UART_Transmit(&huart1, reinterpret_cast<uint8_t*>(const_cast<char*>(serializedData)), strlen(serializedData), HAL_MAX_DELAY);
 

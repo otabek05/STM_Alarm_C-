@@ -14,24 +14,22 @@ MQTTConnection::MQTTConnection() {
 
 }
 
-void MQTTConnection::init(Config config, Utils * utilInstance) {
+void MQTTConnection::init(Config* configInstance, Utils * utilInstance) {
 	    utils = utilInstance;
-	    NewNetwork(&network, 1);
-	    ConnectNetwork(&network, config.getBrokerIP().data(), config.getBrokerPort());
-	    MQTTClientInit(&mqttClient, &network, 1000,send_buffer , sizeof(send_buffer), recieve_buff, sizeof(recieve_buff));
-	    if (!connect(config)) {
-	     	utils->print("MQTT Connection has been failed\r\n");
-	      }
+	    config = configInstance;
 }
 
-bool MQTTConnection::connect(Config config) {
+bool MQTTConnection::connect() {
+	NewNetwork(&network, 1);
+	ConnectNetwork(&network, config->getBrokerIP().data(), config->getBrokerPort());
+    MQTTClientInit(&mqttClient, &network, 1000,send_buffer , sizeof(send_buffer), recieve_buff, sizeof(recieve_buff));
     // Set MQTT connection parameters
     MQTTPacket_connectData connectData = MQTTPacket_connectData_initializer;
     connectData.MQTTVersion = 3;
-    connectData.clientID.cstring = strdup(config.getClientId().c_str());
-    connectData.username.cstring = const_cast<char*>(config.getUsername().c_str());
-    connectData.password.cstring = const_cast<char*>(config.getPassword().c_str());
-    connectData.keepAliveInterval = config.getKeepAliveInterval();
+    connectData.clientID.cstring = strdup(config->getClientId().c_str());
+    connectData.username.cstring = const_cast<char*>(config->getUsername().c_str());
+    connectData.password.cstring = const_cast<char*>(config->getPassword().c_str());
+    connectData.keepAliveInterval = config->getKeepAliveInterval();
     connectData.cleansession = 1;
 
     // Attempt to connect to the MQTT broker
@@ -39,12 +37,16 @@ bool MQTTConnection::connect(Config config) {
         utils->print("Connection failed!\n");
         return false;
     }
+    subscribe(config->getTopicSubscribe());
 
-   utils->print("Successfully connected to MQTT broker.\r\n");
+    setIsConnected(true);
+
+    utils->print("Successfully connected to MQTT broker.\r\n");
+
     return true;
 }
 
-bool MQTTConnection::publish(const std::string& message, Config config) {
+bool MQTTConnection::publish(const std::string& message) {
     MQTTMessage mqttMessage;
     mqttMessage.qos = QOS0;
     mqttMessage.retained = 0;
@@ -53,8 +55,9 @@ bool MQTTConnection::publish(const std::string& message, Config config) {
     mqttMessage.payload = (void*)cMessage;
     mqttMessage.payloadlen = message.length();
 
-    if (MQTTPublish(&mqttClient, config.getTopicPublish().c_str(), &mqttMessage) != SUCCESS) {
-      utils->print("Publish failed! \r\n");
+    if (MQTTPublish(&mqttClient, config->getTopicPublish().c_str(), &mqttMessage) != SUCCESS) {
+    	setIsConnected(false);
+         utils->print("Publish failed! \r\n");
         return false;
     }
 
@@ -89,17 +92,29 @@ MQTTConnection::~MQTTConnection() {
 void MQTTConnection::disconnect() {
     // Disconnect from the MQTT broker
     MQTTDisconnect(&mqttClient);
-    utils->print("Disconnected from MQTT broker.\n");
+  //  utils->print("Disconnected from MQTT broker.\n");
 }
 
 void MQTTConnection::mqttYield() {
-	  MQTTYield(&mqttClient, 1000);
+	 if (getIsConnected()) {
+		 MQTTYield(&mqttClient, 1000);
+	 }
+
+}
+
+
+void MQTTConnection::setIsConnected(bool val) {
+	isConnected = val;
+}
+
+bool MQTTConnection::getIsConnected(){
+	return isConnected;
 }
 
 
 void MQTTConnection::handleIncomingMessage(MessageData* data) {
 	    if (data->message->payloadlen >= 1024) {
-	        utils->print("Data size is bigger than expected \r\n");
+	     //   utils->print("Data size is bigger than expected \r\n");
 	        return;
 	    }
 	    char payloadStr[1024]; // Static allocation

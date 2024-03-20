@@ -10,13 +10,13 @@ void Config::init() {
 
     setBrokerIP({172, 30,1,25});
     setBrokerPort(1883);
-    setIP({172, 30, 1, 123});
+    setIP({192, 168, 200, 158});
     setGateway({172, 30, 1, 254});
     setSubnet({255, 255, 255, 0});
     setDNS({8, 8, 8, 8}); // Google's DNS for example
     setKeepAliveInterval(60);
     setDHCPEnabled(true);
-    setIntervalTime(1000); // Example interval time
+    setIntervalTime(5); // Example interval time
 
     setUsername("user");
     setClientId(std::string(clientId));
@@ -126,19 +126,10 @@ char* Config::getInfoList() {
        cJSON_Delete(root); // Delete the cJSON object as it's no longer needed
 
        if (serializedData == NULL) {
+    	   free(serializedData);
            return NULL; // Handle cJSON_Print failure
        }
-       size_t newDataSize = strlen(serializedData) + 2; // +2 for "\r" and "\0"
-       char* sendData = static_cast<char*>(malloc(newDataSize));
-
-       if (sendData == NULL) {
-           free(serializedData); // Don't forget to free the original data if memory allocation fails
-           return NULL; // Handle memory allocation failure
-       }
-       strcpy(sendData, serializedData);
-       strcat(sendData, "\r");
-       free(serializedData); // Free the original serialized data as it's no longer needed
-       return sendData;
+       return serializedData;
 
 }
 
@@ -301,6 +292,7 @@ std::array<uint8_t, 4> Config::getSubnet() const { return subnet; }
 std::array<uint8_t, 4> Config::getDNS() const { return dns; }
 uint16_t Config::getKeepAliveInterval() const { return keep_alive_interval; }
 bool Config::getDHCPEnabled() const { return dhcp_enabled; }
+bool Config::getIpAssigned() const {return ip_assigned;}
 uint32_t Config::getIntervalTime()  const { return interval_time;}
 std::string Config::getUsername()const { return username; }
 std::string Config::getClientId()const  { return clientId; }
@@ -321,6 +313,7 @@ void Config::setSubnet(const std::array<uint8_t, 4>& value) { subnet = value; }
 void Config::setDNS(const std::array<uint8_t, 4>& value) { dns = value; }
 void Config::setKeepAliveInterval(uint16_t value) { keep_alive_interval = value; }
 void Config::setDHCPEnabled(bool value) { dhcp_enabled = value; }
+void Config::setIpAssigned(bool value) {ip_assigned = value;}
 void Config::setIntervalTime(uint32_t value) { interval_time = value; }
 
 void Config::setUsername(const std::string& value) { username = value; }

@@ -26,30 +26,20 @@ public:
     ~EthernetManager();
 
 
-    void initialize( Config *conf , Utils *UtilClass );
+    void init( Config *configInstance , Utils *UtilClass );
     bool performPingTest();
     void reconnect();
 
-    bool isIpAssigned();
-    void setIPAssiged(bool val);
+    void connect();
 
     Utils* utils;
+    Config* config;
 private:
 
-    static bool ip_assigned;
     void resetAssert();
     void resetDeassert();
-    void selectW5500();
-    void unselectW5500();
-    void readBuffer(uint8_t* buff, uint16_t len);
-    void writeBuffer( uint8_t* buff, uint16_t len);
-    uint8_t readByte();
-    void writeByte(uint8_t byte);
-    void callbackIPAssigned();
-    void callbackIPConflict();
     void initWIZCHIP();
-    void configureNetwork( Config *conf);
-
+    void configureNetwork();
 
     static void W5500_Select();
     static void W5500_Unselect();
@@ -64,6 +54,8 @@ private:
     static uint8_t dns_buffer[2048];
     static uint8_t DHCP_SOCKET;
     static uint8_t DNS_SOCKET;
+
+    static EthernetManager* instance;
 
     // Add other member variables as needed
 };

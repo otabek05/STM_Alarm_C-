@@ -17,18 +17,23 @@ class MQTTConnection{
 public:
     MQTTConnection();
     ~MQTTConnection();
-    void init(Config config, Utils *utilInstance);
+    void init(Config* config, Utils *utilInstance);
     Utils* utils;
-    bool connect(Config conf);
-    bool publish(const std::string& message, Config config);
+    Config* config;
+    bool connect();
+    bool publish(const std::string& message);
     void subscribe(std::string topic);
     void disconnect();
     void mqttYield();
+
+    bool getIsConnected();
+    void setIsConnected(bool val);
 
 private:
     static void handleMessage(MessageData* data);
     void handleIncomingMessage(MessageData* data); // Instance method to handle messages
 
+    bool isConnected = false;
     MQTTClient mqttClient;
     Network network;
     static MQTTConnection* instance; // Static instance pointer for static callback compatibility

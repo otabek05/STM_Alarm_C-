@@ -14,38 +14,33 @@ uint8_t EthernetManager::dns_buffer[2048];
 uint8_t EthernetManager::DHCP_SOCKET = 1;
 uint8_t EthernetManager::DNS_SOCKET = 1;
 
+EthernetManager* EthernetManager::instance = nullptr;
 
 EthernetManager::~EthernetManager() {
 
 }
 
 EthernetManager::EthernetManager() {
-
+	instance = this;
 }
 
-bool EthernetManager::ip_assigned = false;
-
-bool EthernetManager::isIpAssigned() {
-	return ip_assigned;
-}
-
-void EthernetManager::setIPAssiged(bool val){
-	ip_assigned = val;
-}
-
-void EthernetManager::initialize( Config *conf, Utils *utilClass) {
+void EthernetManager::init( Config *conf, Utils *utilClass) {
     utils = utilClass;
-    utils->playSound();
-	utils->print("Initializing Internet \r\n");
+    config = conf;
+   // utils->playSound();
+//	utils->print("Initializing Internet \r\n");
+
+}
+
+void EthernetManager::connect() {
 
     resetAssert();
     HAL_Delay(100); // Delay for the reset
     resetDeassert();
     HAL_Delay(300);
     initWIZCHIP();
-    if (conf != nullptr) {
-        configureNetwork(conf);
-    }
+    configureNetwork();
+
 }
 
 bool EthernetManager::performPingTest() {
@@ -65,12 +60,12 @@ void EthernetManager::reconnect() {
 
 
 void EthernetManager::resetAssert() {
-    utils->print("Resetting!!! \r\n");
+
     HAL_GPIO_WritePin(W5x00_RESET_PORT, W5x00_RESET_PIN, GPIO_PIN_RESET);
 }
 
 void EthernetManager::resetDeassert() {
-	utils->print("Desserting!!! \r\n");
+
     HAL_GPIO_WritePin(W5x00_RESET_PORT, W5x00_RESET_PIN, GPIO_PIN_SET);
 }
 
@@ -84,13 +79,6 @@ void EthernetManager::W5500_Unselect() {
 	 HAL_GPIO_WritePin(W5500_CS_GPIO_Port, W5500_CS_Pin, GPIO_PIN_SET);
 }
 
-void EthernetManager::selectW5500() {
-    HAL_GPIO_WritePin(W5500_CS_GPIO_Port, W5500_CS_Pin, GPIO_PIN_RESET);
-}
-
-void EthernetManager::unselectW5500() {
-    HAL_GPIO_WritePin(W5500_CS_GPIO_Port, W5500_CS_Pin, GPIO_PIN_SET);
-}
 
 void EthernetManager::W5500_ReadBuff(uint8_t* buff, uint16_t len) {
     HAL_SPI_Receive(&hspi2, buff, len, HAL_MAX_DELAY);
@@ -111,16 +99,17 @@ void EthernetManager::W5500_WriteByte(uint8_t byte) {
 }
 
 void EthernetManager::Callback_IPAssigned() {
-    	ip_assigned = true;
+    	if (instance) {
+    		instance->config->setIpAssigned(true);
+    	}
 }
 
 void EthernetManager::Callback_IPConflict() {
- // Print("Callback: IP conflict!\r\n");
 }
 
 
 void EthernetManager::initWIZCHIP() {
-    utils->print("\r\nWIZCHIP Initialization called!\r\n");
+//    utils->print("\r\nWIZCHIP Initialization called!\r\n");
     W5500_Unselect();
     reg_wizchip_cs_cbfunc(W5500_Select, W5500_Unselect);
     reg_wizchip_spi_cbfunc(W5500_ReadByte, W5500_WriteByte);
@@ -128,11 +117,8 @@ void EthernetManager::initWIZCHIP() {
 
     uint8_t memsize[2][8] = {{2, 2, 2, 2, 2, 2, 2, 2}, {2, 2, 2, 2, 2, 2, 2, 2}};
     if (ctlwizchip(CW_INIT_WIZCHIP, (void*)memsize) == -1) {
-     //   Print("WIZCHIP Initialization failed.\r\n");
         return;
     }
-
-    // Check PHY link status
     uint8_t tmp;
     do {
         if (ctlwizchip(CW_GET_PHYLINK, (void*)&tmp) == -1) {
@@ -140,13 +126,13 @@ void EthernetManager::initWIZCHIP() {
             return;
         }
     } while (tmp == PHY_LINK_OFF);
-    utils->print("WIZCHIP Initialized successfully.\r\n");
+   // utils->print("WIZCHIP Initialized successfully.\r\n");
 }
 
 
-void EthernetManager::configureNetwork( Config* conf) {
-	utils->print("Initializing Netwok Configuration!!! \r\n");
-    if (conf == nullptr) {
+void EthernetManager::configureNetwork() {
+	//utils->print("Initializing Netwok Configuration!!! \r\n");
+    if (config == nullptr) {
            return;
        }
        uint8_t mac[6];
@@ -164,37 +150,55 @@ void EthernetManager::configureNetwork( Config* conf) {
 
        setSHAR(net_info.mac); // Apply MAC address
 
-       utils->print("MAC Address: %02X:%02X:%02X:%02X:%02X:%02X\r\n",
-                  mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+     //  utils->print("MAC Address: %02X:%02X:%02X:%02X:%02X:%02X\r\n",
+        //          mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 
-       if (conf->getDHCPEnabled()) {
+       if (config->getDHCPEnabled()) {
            // DHCP mode
-    	   utils->print("DHCP mode has been enabled@ \r\n");
+    	//   utils->print("DHCP mode has been enabled@ \r\n");
            DHCP_init(DHCP_SOCKET, dhcp_buffer);
            reg_dhcp_cbfunc(Callback_IPAssigned, Callback_IPAssigned, Callback_IPConflict);
 
+           uint8_t attempt = 0;
+           //utils->print("Attempting DHCP lease...\r\n");
+           while (!config->getIpAssigned()) {
+
+        	   DHCP_run();
+        	   HAL_Delay(100);
+        	   attempt ++;
+        	   if(attempt == 10) break;
+
+           }
+
+           /*
    	    do {
-   	        utils->print("Attempting DHCP lease...\r\n");
-   	         setIPAssiged(false);
-   	        while (!isIpAssigned()) {
+
+
+   	         config->setIpAssigned(false);
+   	        while (config->getIpAssigned()) {
    	            DHCP_run();
-   	            HAL_Delay(100); // Delay between DHCP runs
+   	            HAL_Delay(100);
+   	            attempt ++;
+   	            if(attempt == 5) break;
    	        }
-   	    } while (!isIpAssigned()); // Retry mechanism if not successful
+   	    } while (!config->getIpAssigned()); // Retry mechanism if not successful
+
+   	    */
+           if (!config->getIpAssigned()) return;
            // Get network configuration from DHCP
            getIPfromDHCP(net_info.ip);
            getGWfromDHCP(net_info.gw);
            getSNfromDHCP(net_info.sn);
            getDNSfromDHCP(net_info.dns);
 
-           conf->setDHCPNetworkConfig(&net_info);
+           config->setDHCPNetworkConfig(&net_info);
        } else {
     	   utils->print("STATIC mode has been enabled@ \r\n");
            // Static IP mode
-    	   std::memcpy(net_info.ip, conf->getIP().data(), 4); // For std::array
-    	   std::memcpy(net_info.gw, conf->getGateway().data(), 4); // For std::array
-    	   std::memcpy(net_info.sn, conf->getSubnet().data(), 4); // For std::array
-    	   std::memcpy(net_info.dns, conf->getDNS().data(), 4); // For std::array
+    	   std::memcpy(net_info.ip, config->getIP().data(), 4); // For std::array
+    	   std::memcpy(net_info.gw, config->getGateway().data(), 4); // For std::array
+    	   std::memcpy(net_info.sn, config->getSubnet().data(), 4); // For std::array
+    	   std::memcpy(net_info.dns, config->getDNS().data(), 4); // For std::array
            net_info.dhcp = NETINFO_STATIC;
        }
        // Apply network settings to WIZnet chip
