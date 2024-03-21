@@ -56,7 +56,7 @@ AnalogReadings MuxSelect::SwitchAnalog() {
         HAL_GPIO_WritePin(muxSelect[2].port, muxSelect[2].pin, analogCase[i].S2);
 
         readings.values[i] = read();
-        HAL_Delay(100);
+      //  HAL_Delay(100);
     }
 
     return readings; // Return the struct containing the array

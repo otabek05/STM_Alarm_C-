@@ -111,7 +111,7 @@ void Utils::createJSON(std::string *message) {
         char formattedStatus[32]; // Buffer to hold the formatted float string
 
         snprintf(formattedStatus, sizeof(formattedStatus), "%.2f", status);
-        print("Analog Float: %s  AnalogNumber: %d\r\n", formattedStatus, i);
+      //  print("Analog Float: %s  AnalogNumber: %d\r\n", formattedStatus, i);
 
         // Add the formatted string to the JSON object
         cJSON_AddStringToObject(obj, conf->getAnalogInputName(i).c_str(), formattedStatus);

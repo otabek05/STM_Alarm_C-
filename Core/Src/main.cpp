@@ -84,15 +84,17 @@ int main(void)
 
   while (true)
   {
-	uartHandler.processReceivedData();
 	mqttClient.mqttYield();
+	uartHandler.processReceivedData();
 
 	if (timeValue == static_cast<int>(config.getIntervalTime())) {
 
 		if (!config.getIpAssigned()) {
-		  ethManager.connect();
-		  config.initmqttConfig();
-		  mqttClient.connect();
+		  if (ethManager.connect()){
+			  config.initmqttConfig();
+			  mqttClient.connect();
+		  }
+
 		}else {
 			if (mqttClient.getIsConnected()) {
 				utils.createJSON(&statusJsonBuffer);
@@ -108,13 +110,19 @@ int main(void)
 
 	}
 
-	 if (uartHandler.getRealTimeData()) {
-		 if (timeValue == 1) {
-			 uartHandler.SendRealTimeData(&statusJsonUSARTBuffer);
-		 }
 
-		}
-  }
+	  if (uartHandler.getRealTimeData()) {
+	              if (timeValue == 1 ) {
+	             	 uartHandler.SendRealTimeData(&statusJsonUSARTBuffer);
+	             }
+	  }
+
+
+// While loop ends
+
+ }
+
+
 
 }
 
@@ -263,9 +271,9 @@ static void MX_TIM1_Init(void)
 
   /* USER CODE END TIM1_Init 1 */
   htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 8399;
+  htim1.Init.Prescaler = 83999;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim1.Init.Period = 19999;
+  htim1.Init.Period =  19999;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim1.Init.RepetitionCounter = 0;
   htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
@@ -419,6 +427,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
     if (htim->Instance == TIM1)
     {
+    	//utils.print("TimeVal: %d \r\n", timeValue);
     	timeValue++;
     }
 }

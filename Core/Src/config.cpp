@@ -16,7 +16,7 @@ void Config::init() {
     setDNS({8, 8, 8, 8}); // Google's DNS for example
     setKeepAliveInterval(60);
     setDHCPEnabled(true);
-    setIntervalTime(5); // Example interval time
+    setIntervalTime(3); // Example interval time
 
     setUsername("user");
     setClientId(std::string(clientId));

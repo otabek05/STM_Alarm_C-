@@ -28,18 +28,25 @@ void EthernetManager::init( Config *conf, Utils *utilClass) {
     utils = utilClass;
     config = conf;
     utils->playSound();
-utils->print("Initializing Internet \r\n");
+    utils->print("Initializing Internet \r\n");
 
 }
 
-void EthernetManager::connect() {
+bool EthernetManager::connect() {
 
     resetAssert();
     HAL_Delay(100); // Delay for the reset
     resetDeassert();
     HAL_Delay(300);
-    initWIZCHIP();
-    configureNetwork();
+    if (!initWIZCHIP()) {
+    	return false;
+    }
+
+    if (! configureNetwork()) {
+    	return false;
+    }
+
+     return true;
 
 }
 
@@ -108,7 +115,7 @@ void EthernetManager::Callback_IPConflict() {
 }
 
 
-void EthernetManager::initWIZCHIP() {
+bool EthernetManager::initWIZCHIP() {
     utils->print("\r\nWIZCHIP Initialization called!\r\n");
     W5500_Unselect();
     reg_wizchip_cs_cbfunc(W5500_Select, W5500_Unselect);
@@ -117,24 +124,26 @@ void EthernetManager::initWIZCHIP() {
 
     uint8_t memsize[2][8] = {{2, 2, 2, 2, 2, 2, 2, 2}, {2, 2, 2, 2, 2, 2, 2, 2}};
     if (ctlwizchip(CW_INIT_WIZCHIP, (void*)memsize) == -1) {
-        return;
+        return false;
     }
     uint8_t tmp;
+    uint8_t attempt = 0;
     do {
         if (ctlwizchip(CW_GET_PHYLINK, (void*)&tmp) == -1) {
          //  Print("UNKNOWN PHY LINK STATUS.\r\n");
-            return;
+        	return false;
+
         }
-    } while (tmp == PHY_LINK_OFF);
+    }  while (tmp == PHY_LINK_OFF );
+
+    if (tmp == PHY_LINK_OFF ) return false;
+    else return true;
     utils->print("WIZCHIP Initialized successfully.\r\n");
 }
 
 
-void EthernetManager::configureNetwork() {
+bool EthernetManager::configureNetwork() {
 	utils->print("Initializing Netwok Configuration!!! \r\n");
-    if (config == nullptr) {
-           return;
-       }
        uint8_t mac[6];
        getSHAR(mac); // Assuming you have a function getSHAR to get MAC address
        HAL_Delay(300);
@@ -160,7 +169,7 @@ void EthernetManager::configureNetwork() {
            reg_dhcp_cbfunc(Callback_IPAssigned, Callback_IPAssigned, Callback_IPConflict);
 
            uint8_t attempt = 0;
-           //utils->print("Attempting DHCP lease...\r\n");
+           utils->print("Attempting DHCP lease...\r\n");
            while (!config->getIpAssigned()) {
 
         	   DHCP_run();
@@ -169,22 +178,7 @@ void EthernetManager::configureNetwork() {
         	   if(attempt == 10) break;
 
            }
-
-           /*
-   	    do {
-
-
-   	         config->setIpAssigned(false);
-   	        while (config->getIpAssigned()) {
-   	            DHCP_run();
-   	            HAL_Delay(100);
-   	            attempt ++;
-   	            if(attempt == 5) break;
-   	        }
-   	    } while (!config->getIpAssigned()); // Retry mechanism if not successful
-
-   	    */
-           if (!config->getIpAssigned()) return;
+           if (!config->getIpAssigned()) return false;
            // Get network configuration from DHCP
            getIPfromDHCP(net_info.ip);
            getGWfromDHCP(net_info.gw);
@@ -213,4 +207,6 @@ void EthernetManager::configureNetwork() {
 
        // Initializing DNS if necessary
        DNS_init(DNS_SOCKET, dns_buffer);
+
+       return true;
 }

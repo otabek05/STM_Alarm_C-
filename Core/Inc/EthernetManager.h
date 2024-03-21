@@ -30,7 +30,7 @@ public:
     bool performPingTest();
     void reconnect();
 
-    void connect();
+    bool connect();
 
     Utils* utils;
     Config* config;
@@ -38,8 +38,8 @@ private:
 
     void resetAssert();
     void resetDeassert();
-    void initWIZCHIP();
-    void configureNetwork();
+    bool initWIZCHIP();
+    bool configureNetwork();
 
     static void W5500_Select();
     static void W5500_Unselect();

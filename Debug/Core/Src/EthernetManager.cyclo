@@ -2,20 +2,20 @@ C:\ST\STM32CubeIDE_1.14.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.external
 ../Core/Src/EthernetManager.cpp:19:1:EthernetManager::~EthernetManager()	1
 ../Core/Src/EthernetManager.cpp:23:1:EthernetManager::EthernetManager()	1
 ../Core/Src/EthernetManager.cpp:27:6:void EthernetManager::init(Config*, Utils*)	1
-../Core/Src/EthernetManager.cpp:35:6:void EthernetManager::connect()	1
-../Core/Src/EthernetManager.cpp:46:6:bool EthernetManager::performPingTest()	1
-../Core/Src/EthernetManager.cpp:51:6:void EthernetManager::reconnect()	1
-../Core/Src/EthernetManager.cpp:62:6:void EthernetManager::resetAssert()	1
-../Core/Src/EthernetManager.cpp:67:6:void EthernetManager::resetDeassert()	1
-../Core/Src/EthernetManager.cpp:73:6:static void EthernetManager::W5500_Select()	1
-../Core/Src/EthernetManager.cpp:78:6:static void EthernetManager::W5500_Unselect()	1
-../Core/Src/EthernetManager.cpp:83:6:static void EthernetManager::W5500_ReadBuff(uint8_t*, uint16_t)	1
-../Core/Src/EthernetManager.cpp:87:6:static void EthernetManager::W5500_WriteBuff(uint8_t*, uint16_t)	1
-../Core/Src/EthernetManager.cpp:91:9:static uint8_t EthernetManager::W5500_ReadByte()	1
-../Core/Src/EthernetManager.cpp:97:6:static void EthernetManager::W5500_WriteByte(uint8_t)	1
-../Core/Src/EthernetManager.cpp:101:6:static void EthernetManager::Callback_IPAssigned()	2
-../Core/Src/EthernetManager.cpp:107:6:static void EthernetManager::Callback_IPConflict()	1
-../Core/Src/EthernetManager.cpp:111:6:void EthernetManager::initWIZCHIP()	4
-../Core/Src/EthernetManager.cpp:133:6:void EthernetManager::configureNetwork()	6
+../Core/Src/EthernetManager.cpp:35:6:bool EthernetManager::connect()	3
+../Core/Src/EthernetManager.cpp:53:6:bool EthernetManager::performPingTest()	1
+../Core/Src/EthernetManager.cpp:58:6:void EthernetManager::reconnect()	1
+../Core/Src/EthernetManager.cpp:69:6:void EthernetManager::resetAssert()	1
+../Core/Src/EthernetManager.cpp:74:6:void EthernetManager::resetDeassert()	1
+../Core/Src/EthernetManager.cpp:80:6:static void EthernetManager::W5500_Select()	1
+../Core/Src/EthernetManager.cpp:85:6:static void EthernetManager::W5500_Unselect()	1
+../Core/Src/EthernetManager.cpp:90:6:static void EthernetManager::W5500_ReadBuff(uint8_t*, uint16_t)	1
+../Core/Src/EthernetManager.cpp:94:6:static void EthernetManager::W5500_WriteBuff(uint8_t*, uint16_t)	1
+../Core/Src/EthernetManager.cpp:98:9:static uint8_t EthernetManager::W5500_ReadByte()	1
+../Core/Src/EthernetManager.cpp:104:6:static void EthernetManager::W5500_WriteByte(uint8_t)	1
+../Core/Src/EthernetManager.cpp:108:6:static void EthernetManager::Callback_IPAssigned()	2
+../Core/Src/EthernetManager.cpp:114:6:static void EthernetManager::Callback_IPConflict()	1
+../Core/Src/EthernetManager.cpp:118:6:bool EthernetManager::initWIZCHIP()	5
+../Core/Src/EthernetManager.cpp:145:6:bool EthernetManager::configureNetwork()	5
 C:\ST\STM32CubeIDE_1.14.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235\tools\bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/include/c++/11.3.1/array:257:7:std::array<_Tp, _Nm>::value_type* std::array<_Tp, _Nm>::data() [with _Tp = unsigned char; unsigned int _Nm = 4]	1
 C:\ST\STM32CubeIDE_1.14.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235\tools\bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/include/c++/11.3.1/array:60:7:static constexpr _Tp* std::__array_traits<_Tp, _Nm>::_S_ptr(const _Tp (&)[_Nm]) [with _Tp = unsigned char; unsigned int _Nm = 4]	1
