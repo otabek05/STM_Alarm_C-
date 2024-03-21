@@ -51,7 +51,7 @@ public:
 
     void init(Config* configInstance, MuxSelect* muxInstance);
     void createJSON(std::string *message);
-
+    void createUSARTRealTime(std::string *messsage);
     void createUSARTJson(std::string *message);
     bool switchRelay(GPIO_TypeDef* port, uint16_t switchPin, int status);
     static void playSound();

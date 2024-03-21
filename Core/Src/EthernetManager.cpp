@@ -27,8 +27,8 @@ EthernetManager::EthernetManager() {
 void EthernetManager::init( Config *conf, Utils *utilClass) {
     utils = utilClass;
     config = conf;
-   // utils->playSound();
-//	utils->print("Initializing Internet \r\n");
+    utils->playSound();
+utils->print("Initializing Internet \r\n");
 
 }
 
@@ -109,7 +109,7 @@ void EthernetManager::Callback_IPConflict() {
 
 
 void EthernetManager::initWIZCHIP() {
-//    utils->print("\r\nWIZCHIP Initialization called!\r\n");
+    utils->print("\r\nWIZCHIP Initialization called!\r\n");
     W5500_Unselect();
     reg_wizchip_cs_cbfunc(W5500_Select, W5500_Unselect);
     reg_wizchip_spi_cbfunc(W5500_ReadByte, W5500_WriteByte);
@@ -126,12 +126,12 @@ void EthernetManager::initWIZCHIP() {
             return;
         }
     } while (tmp == PHY_LINK_OFF);
-   // utils->print("WIZCHIP Initialized successfully.\r\n");
+    utils->print("WIZCHIP Initialized successfully.\r\n");
 }
 
 
 void EthernetManager::configureNetwork() {
-	//utils->print("Initializing Netwok Configuration!!! \r\n");
+	utils->print("Initializing Netwok Configuration!!! \r\n");
     if (config == nullptr) {
            return;
        }
@@ -150,12 +150,12 @@ void EthernetManager::configureNetwork() {
 
        setSHAR(net_info.mac); // Apply MAC address
 
-     //  utils->print("MAC Address: %02X:%02X:%02X:%02X:%02X:%02X\r\n",
-        //          mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+       utils->print("MAC Address: %02X:%02X:%02X:%02X:%02X:%02X\r\n",
+                  mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 
        if (config->getDHCPEnabled()) {
            // DHCP mode
-    	//   utils->print("DHCP mode has been enabled@ \r\n");
+    	   utils->print("DHCP mode has been enabled@ \r\n");
            DHCP_init(DHCP_SOCKET, dhcp_buffer);
            reg_dhcp_cbfunc(Callback_IPAssigned, Callback_IPAssigned, Callback_IPConflict);
 

@@ -87,14 +87,15 @@ int main(void)
 	uartHandler.processReceivedData();
 	mqttClient.mqttYield();
 
-	utils.createJSON(&statusJsonBuffer);
 	if (timeValue == static_cast<int>(config.getIntervalTime())) {
+
 		if (!config.getIpAssigned()) {
 		  ethManager.connect();
 		  config.initmqttConfig();
 		  mqttClient.connect();
 		}else {
 			if (mqttClient.getIsConnected()) {
+				utils.createJSON(&statusJsonBuffer);
 				mqttClient.publish(statusJsonBuffer);
 			}else {
 			    mqttClient.init(&config, &utils);
@@ -108,7 +109,7 @@ int main(void)
 	}
 
 	 if (uartHandler.getRealTimeData()) {
-		 if (timeValue == 2) {
+		 if (timeValue == 1) {
 			 uartHandler.SendRealTimeData(&statusJsonUSARTBuffer);
 		 }
 

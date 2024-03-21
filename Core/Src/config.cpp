@@ -65,72 +65,81 @@ void Config::initmqttConfig() {
 }
 
 
-cJSON *createJsonArray(const uint8_t arr[], size_t len) {
-       cJSON *jsonArray = cJSON_CreateArray();
-       for (size_t i = 0; i < len; ++i) {
-           cJSON_AddItemToArray(jsonArray, cJSON_CreateNumber(arr[i]));
-       }
-       return jsonArray;
-   }
+
+std::string createListString(std::array<uint8_t, 4> arr ) {
+	std::string data;
+	for (size_t i = 0; i < arr.size(); ++i) {
+		    if (i > 0) {
+		        // Add a period before all but the first number
+		       data += ",";
+		    }
+		    data += std::to_string(arr[i]); // Convert each integer to a string
+		}
+
+	return data;
+}
 
 
-char* Config::getInfoList() {
-    cJSON *root = cJSON_CreateObject();
+std::string createStringFromArray(std::array<std::string, MAX_DIGITAL_INPUTS>arr ) {
+	std::string data;
 
-    if (root == NULL) {
-           char* emptyString = static_cast<char*>(malloc(1)); // Allocate memory for an empty string
-           if (emptyString != nullptr) {
-               *emptyString = '\0'; // Ensure it's a valid empty string
-           }
-           return emptyString; // Return an allocated empty string to keep memory management consistent
-       }
+	for(size_t i = 0 ; i < arr.size(); i++ ) {
+		if (i > 0 ) {
+			data += ",";
+		}
+		std::string val = arr[i];
+		if (val != "") data +=val;
+	}
 
-    // Existing configurations
-    cJSON_AddItemToObject(root, "ip", createJsonArray(ip.data(), ip.size()));
-    cJSON_AddItemToObject(root, "gateway", createJsonArray(gateway.data(), gateway.size()));
-    cJSON_AddItemToObject(root, "subnet", createJsonArray(subnet.data(), subnet.size()));
-    cJSON_AddItemToObject(root, "dns", createJsonArray(dns.data(), dns.size()));
+	return data;
+
+}
 
 
-    cJSON_AddItemToObject(root, "brokerIp", createJsonArray(broker_ip.data(), dns.size()));
 
-    // Serialize Analog Input Names
-    auto analogInputNames = getAnalogInputNames();
-    cJSON *analogInputsArray = cJSON_CreateArray();
-    for (const auto& name : analogInputNames) {
-        cJSON_AddItemToArray(analogInputsArray, cJSON_CreateString(name.c_str()));
-    }
-   cJSON_AddItemToObject(root, "ai", analogInputsArray);
+std::string createStringFromArray8len(std::array<std::string, 8>arr) {
+	std::string data;
 
-    // Serialize Digital Input Names
-    auto digitalInputNames = getDigitalInputNames();
-    cJSON *digitalInputsArray = cJSON_CreateArray();
-    for (const auto& name : digitalInputNames) {
-        cJSON_AddItemToArray(digitalInputsArray, cJSON_CreateString(name.c_str()));
-    }
-    cJSON_AddItemToObject(root, "di", digitalInputsArray);
+	for(size_t i = 0 ; i < arr.size(); i++ ) {
+		if (i > 0 ) {
+			data += ",";
+		}
+		std::string val = arr[i];
+		if (val != "") data +=val;
+	}
 
-    // Serialize Digital Output Names
-    auto digitalOutputNames = getDigitalOutputNames();
-    cJSON *digitalOutputsArray = cJSON_CreateArray();
-    for (const auto& name : digitalOutputNames) {
-        cJSON_AddItemToArray(digitalOutputsArray, cJSON_CreateString(name.c_str()));
-    }
-    cJSON_AddItemToObject(root, "type", cJSON_CreateString("info"));
-    cJSON_AddItemToObject(root, "relay", digitalOutputsArray);
-    cJSON_AddItemToObject(root, "mac", cJSON_CreateString(getClientId().c_str()));
-    cJSON_AddItemToObject(root, "port", cJSON_CreateNumber(getBrokerPort()));
-    cJSON_AddItemToObject(root, "net-status", cJSON_CreateBool(getDHCPEnabled()));
+	return data;
 
-    char* serializedData = cJSON_Print(root);
-       cJSON_Delete(root); // Delete the cJSON object as it's no longer needed
+}
 
-       if (serializedData == NULL) {
-    	   free(serializedData);
-           return NULL; // Handle cJSON_Print failure
-       }
-       return serializedData;
+char* Config::getInfoList(){
+	std::string data = "1";
+	std::string comma = ";";
+	std::array<std::string,11 > lists;
 
+
+	lists[0] = getClientId();
+	lists[1] = createListString(getBrokerIP());
+	lists[2] = std::to_string(getBrokerPort());
+	lists[3] = createListString(getIP());
+	lists[4] = createListString(getSubnet());
+	lists[5] = createListString(getGateway());
+	lists[6] = createListString(getDNS());
+	lists[7] = createStringFromArray8len(getAnalogInputNames());
+	lists[8] = createStringFromArray(getDigitalInputNames());
+	lists[9] = createStringFromArray8len(getDigitalOutputNames());
+	lists[10] = getDHCPEnabled() ? std::to_string(1) : std::to_string(0);
+	for (size_t i = 0; i < lists.size(); i ++ ) {
+		data += comma;
+		data += lists[i];
+	}
+
+
+	data = data+ "\r";
+	char* result = new char[data.length() + 1]; // +1 for null terminator
+	strcpy(result, data.c_str());
+
+	return result;
 }
 
 std::array<uint8_t, 4> Config::extractIPAddress(cJSON* parent, const char* name) {

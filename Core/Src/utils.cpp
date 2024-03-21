@@ -132,6 +132,52 @@ void Utils::createJSON(std::string *message) {
     cJSON_Delete(root); // Clean up the cJSON object
 }
 
+void Utils::createUSARTRealTime(std::string *messsage) {
+	std::string data = "2";
+	std::string comma = ";";
+	std::array<std::string, 3 > list;
+	AnalogReadings analogValue = mux->SwitchAnalog();
+
+
+	for (size_t i = 0 ; i < 8 ; i++) {
+		float status = analogValue.values[i]; // Placeholder, adjust according to your implementation
+		char formattedStatus[32];
+		snprintf(formattedStatus, sizeof(formattedStatus), "%.2f", status);
+		if (i > 0 ) {
+			list[0] += ",";
+		}
+
+		list[0] += formattedStatus;
+	}
+
+	for (size_t i = 0; i < 16; i ++) {
+		int status = readGPIOPinState(digitalInputs[i].port, digitalInputs[i].pin);
+		if (i > 0 ) {
+			list[1] += ",";
+		}
+		list[1] += std::to_string(status);
+	}
+
+	for (size_t i = 0; i < 8;  i++) {
+		int status = readGPIOPinState(switches[i].port, switches[i].pin);
+		if (i > 0 ) {
+			list[2] += ",";
+		}
+		list[2] += std::to_string(status);
+	}
+
+	for (size_t i = 0; i < list.size(); i ++) {
+		data += comma;
+		data+= list[i];
+	}
+
+	data = data+ "\r";
+    *messsage = data;
+
+}
+
+
+
 void Utils::createUSARTJson(std::string *message) {
 	 cJSON* rootJson = cJSON_CreateObject();
 	 cJSON* outputsArray = cJSON_CreateArray();
