@@ -8,7 +8,7 @@ Config::Config(){
 
 void Config::init() {
 
-    setBrokerIP({172, 30,1,25});
+    setBrokerIP({172, 30,1,29});
     setBrokerPort(1883);
     setIP({192, 168, 200, 158});
     setGateway({172, 30, 1, 254});
@@ -16,7 +16,7 @@ void Config::init() {
     setDNS({8, 8, 8, 8}); // Google's DNS for example
     setKeepAliveInterval(60);
     setDHCPEnabled(true);
-    setIntervalTime(3); // Example interval time
+    setIntervalTime(2); // Example interval time
 
     setUsername("user");
     setClientId(std::string(clientId));
@@ -58,7 +58,7 @@ void Config::initmqttConfig() {
      setSHAR(mac); // Commented out because it seems unnecessary here
     std::string clientID = std::string(macString);
     std::string data = "data/" + clientID;
-
+  //  std::string data = "sub";
     // Set MQTT client ID and topic to subscribe
     setClientId(clientID);
     setTopicSubscribe(data);

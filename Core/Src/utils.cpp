@@ -82,7 +82,7 @@ int Utils::readGPIOPinState(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin){
 	return HAL_GPIO_ReadPin(GPIOx, GPIO_Pin) == GPIO_PIN_RESET ? 0 : 1;
 }
 
-
+/*
 void Utils::createJSON(std::string *message) {
     cJSON *root = cJSON_CreateObject();
     cJSON *aiArray = cJSON_CreateArray();
@@ -121,6 +121,49 @@ void Utils::createJSON(std::string *message) {
     cJSON_AddItemToObject(root, "ai", aiArray);
     cJSON_AddItemToObject(root, "di", diArray);
     cJSON_AddItemToObject(root, "do", doArray);
+    cJSON_AddStringToObject(root, "mac", conf->getClientId().c_str());
+
+    // Print and assign the JSON string
+    char* json_string = cJSON_Print(root);
+    if (json_string != nullptr) {
+        *message = json_string;
+        free(json_string); // Free the allocated memory
+    }
+    cJSON_Delete(root); // Clean up the cJSON object
+}
+*/
+
+
+void Utils::createJSON(std::string *message) {
+    cJSON *root = cJSON_CreateObject();
+    // Change aiArray from an array to an object.
+    cJSON *aiObj = cJSON_CreateObject();
+    cJSON *diObj = cJSON_CreateObject();
+    cJSON *doObj = cJSON_CreateObject();
+
+    AnalogReadings analogValue = mux->SwitchAnalog();
+
+    for (int i = 0; i < 8; i++) {
+        int status = readGPIOPinState(switches[i].port, switches[i].pin);
+        cJSON_AddNumberToObject(doObj, conf->getDigitalOutputName(i).c_str(), status);
+    }
+
+    for (int i = 0; i < 16; i++) {
+        int status = readGPIOPinState(digitalInputs[i].port, digitalInputs[i].pin);
+        cJSON_AddNumberToObject(diObj, conf->getDigitalInputName(i).c_str(), status);
+    }
+
+    for (int i = 0; i < 8; i++) {
+        float status = analogValue.values[i]; // Placeholder, adjust according to your implementation
+        char formattedStatus[32]; // Buffer to hold the formatted float string
+        snprintf(formattedStatus, sizeof(formattedStatus), "%.2f", status);
+        cJSON_AddStringToObject(aiObj, conf->getAnalogInputName(i).c_str(), formattedStatus);
+    }
+
+    // Attach the modified aiObj directly to the root, instead of an array.
+    cJSON_AddItemToObject(root, "ai", aiObj);
+    cJSON_AddItemToObject(root, "di", diObj);
+    cJSON_AddItemToObject(root, "do", doObj);
     cJSON_AddStringToObject(root, "mac", conf->getClientId().c_str());
 
     // Print and assign the JSON string

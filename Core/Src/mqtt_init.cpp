@@ -114,7 +114,7 @@ bool MQTTConnection::getIsConnected(){
 
 void MQTTConnection::handleIncomingMessage(MessageData* data) {
 	    if (data->message->payloadlen >= 1024) {
-	     //   utils->print("Data size is bigger than expected \r\n");
+	        utils->print("Data size is bigger than expected \r\n");
 	        return;
 	    }
 	    char payloadStr[1024]; // Static allocation
@@ -126,22 +126,42 @@ void MQTTConnection::handleIncomingMessage(MessageData* data) {
 	    	utils->print("JSON format is not matching!!! \r\n");
 	        return;
 	    }
-	    const cJSON *number = cJSON_GetObjectItemCaseSensitive(json, "number");
-	    const cJSON *status = cJSON_GetObjectItemCaseSensitive(json, "status");
+	    const cJSON *typeJson = cJSON_GetObjectItemCaseSensitive(json, "type");
+	    int type = typeJson->valueint;
 
-	    if (cJSON_IsNumber(number) && cJSON_IsNumber(status)) {
-
-	    	if (number->valueint >= 1 && number->valueint <= 8) {
-	    	    int arrayIndex = number->valueint - 1;
-	    	    PortAndPins targetSwitch = utils->switches[arrayIndex];
-	    	    bool success = utils->switchRelay(targetSwitch.port, targetSwitch.pin, status->valueint);
-	    	    if (success) {
-	    	        utils->print("The %d switch has been toggled.\r\n", number->valueint);
-	    	    } else {
-	    	        utils->print("There is an issue with switch \r\n");
-	    	    }
-	    	}
+	    switch (type){
+	    case 1:
+	    	config->setAnalogInputNamesFromJson(json);
+	    	utils->playSound();
+	    	utils->print("Analog names has been changed! \r\n");
+	    	break;
+	    case 2:
+	    	config->setDigitalInputNamesFromJson(json);
+	    	utils->print("Digital Input Names has been changed! \r\n");
+	    	utils->playSound();
+	    	break;
+	    case 3:
+	    	config->setRelayNamesFromJson(json);
+	    	utils->print("Relay Names has been changed!! \r\n");
+	    	utils->playSound();
+	    	break;
+	    case 4:
+		    const cJSON *number = cJSON_GetObjectItemCaseSensitive(json, "number");
+			const cJSON *status = cJSON_GetObjectItemCaseSensitive(json, "status");
+			if (!cJSON_IsNumber(number) && !cJSON_IsNumber(status)) return;
+			if (number->valueint >= 1 && number->valueint <= 8) {
+				    int arrayIndex = number->valueint - 1;
+				    PortAndPins targetSwitch = utils->switches[arrayIndex];
+				    bool success = utils->switchRelay(targetSwitch.port, targetSwitch.pin, status->valueint);
+				    if (success) {
+				    	  utils->print("The %d switch has been toggled.\r\n", number->valueint);
+				  } else {
+				    	utils->print("There is an issue with switch \r\n");
+		          }
+		    }
+			break;
 	    }
+
 	    cJSON_Delete(json);
 }
 

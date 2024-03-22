@@ -87,6 +87,15 @@ int main(void)
 	mqttClient.mqttYield();
 	uartHandler.processReceivedData();
 
+	if (uartHandler.getRealTimeData()) {
+		   if (timeValue == 2) {
+
+		    uartHandler.SendRealTimeData(&statusJsonUSARTBuffer);
+		   }
+
+		  }
+
+
 	if (timeValue == static_cast<int>(config.getIntervalTime())) {
 
 		if (!config.getIpAssigned()) {
@@ -104,18 +113,12 @@ int main(void)
 			}
 		}
 
-
-
 		timeValue = 0;
 
 	}
 
 
-	  if (uartHandler.getRealTimeData()) {
-	              if (timeValue == 1 ) {
-	             	 uartHandler.SendRealTimeData(&statusJsonUSARTBuffer);
-	             }
-	  }
+
 
 
 // While loop ends
@@ -427,7 +430,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
     if (htim->Instance == TIM1)
     {
-    	utils.print("TimeVal: %d \r\n", timeValue);
+    //	utils.print("TimeVal: %d \r\n", timeValue);
     	timeValue++;
     }
 }
