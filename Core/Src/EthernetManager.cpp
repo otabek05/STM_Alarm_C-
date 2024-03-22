@@ -127,7 +127,7 @@ bool EthernetManager::initWIZCHIP() {
         return false;
     }
     uint8_t tmp;
-    uint8_t attempt = 0;
+  //  uint8_t attempt = 0;
     do {
         if (ctlwizchip(CW_GET_PHYLINK, (void*)&tmp) == -1) {
          //  Print("UNKNOWN PHY LINK STATUS.\r\n");

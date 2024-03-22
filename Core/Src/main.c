@@ -1,132 +1,124 @@
-
+/* USER CODE BEGIN Header */
+/**
+  ******************************************************************************
+  * @file           : main.c
+  * @brief          : Main program body
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2024 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
+/* USER CODE END Header */
+/* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
 
-#include "config.h"
-#include "mqtt_init.h"
-#include "utils.h"
-#include "EthernetManager.h"
-#include "CircularBuffer.h"
-#include "UARTHandler.h"
-#include "MuxSelect.h"
+/* USER CODE END Includes */
 
+/* Private typedef -----------------------------------------------------------*/
+/* USER CODE BEGIN PTD */
 
+/* USER CODE END PTD */
+
+/* Private define ------------------------------------------------------------*/
+/* USER CODE BEGIN PD */
+
+/* USER CODE END PD */
+
+/* Private macro -------------------------------------------------------------*/
+/* USER CODE BEGIN PM */
+
+/* USER CODE END PM */
+
+/* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
 
-TIM_HandleTypeDef htim1;
-
 SPI_HandleTypeDef hspi2;
+
+TIM_HandleTypeDef htim1;
 
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
 
-MuxSelect muxSelect;
+/* USER CODE END PV */
 
-Config config;
-
-Utils utils;
-
-EthernetManager ethManager;
-
-MQTTConnection mqttClient;
-
-UARTHandler uartHandler;
-
-
-volatile int timeValue;
-static std::string statusJsonBuffer;
-static std::string statusJsonUSARTBuffer;
-
-
+/* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_SPI2_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_TIM1_Init(void);
-/*
-void readADCsVoltage(float *voltageArray);
+/* USER CODE BEGIN PFP */
 
-*/
+/* USER CODE END PFP */
 
+/* Private user code ---------------------------------------------------------*/
+/* USER CODE BEGIN 0 */
+
+/* USER CODE END 0 */
+
+/**
+  * @brief  The application entry point.
+  * @retval int
+  */
 int main(void)
 {
+  /* USER CODE BEGIN 1 */
 
+  /* USER CODE END 1 */
+
+  /* MCU Configuration--------------------------------------------------------*/
+
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
 
+  /* USER CODE BEGIN Init */
+
+  /* USER CODE END Init */
+
+  /* Configure the system clock */
   SystemClock_Config();
 
+  /* USER CODE BEGIN SysInit */
 
+  /* USER CODE END SysInit */
+
+  /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_SPI2_Init();
   MX_USART1_UART_Init();
   MX_ADC1_Init();
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
-  HAL_TIM_Base_Start_IT(&htim1);
 
+  /* USER CODE END 2 */
 
- muxSelect.init(&hadc1);
-
- config.init();
-
- utils.init(&config, &muxSelect);
-
- ethManager.init(&config, &utils);
-
- mqttClient.init(&config, &utils);
-
- uartHandler.init(&huart1, &utils, &config);
-
-
-
-
-  while (true)
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+  while (1)
   {
-	mqttClient.mqttYield();
-	uartHandler.processReceivedData();
+    /* USER CODE END WHILE */
 
-	if (timeValue == static_cast<int>(config.getIntervalTime())) {
-
-		if (!config.getIpAssigned()) {
-		  if (ethManager.connect()){
-			  config.initmqttConfig();
-			  mqttClient.connect();
-		  }
-
-		}else {
-			if (mqttClient.getIsConnected()) {
-				utils.createJSON(&statusJsonBuffer);
-				mqttClient.publish(statusJsonBuffer);
-			}else {
-			    mqttClient.init(&config, &utils);
-			}
-		}
-
-
-
-		timeValue = 0;
-
-	}
-
-
-	  if (uartHandler.getRealTimeData()) {
-	              if (timeValue == 1 ) {
-	             	 uartHandler.SendRealTimeData(&statusJsonUSARTBuffer);
-	             }
-	  }
-
-
-// While loop ends
-
- }
-
-
-
+    /* USER CODE BEGIN 3 */
+  }
+  /* USER CODE END 3 */
 }
 
-
+/**
+  * @brief System Clock Configuration
+  * @retval None
+  */
 void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
@@ -166,63 +158,70 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+
+  /** Enables the Clock Security System
+  */
+  HAL_RCC_EnableCSS();
 }
 
-
-
-
+/**
+  * @brief ADC1 Initialization Function
+  * @param None
+  * @retval None
+  */
 static void MX_ADC1_Init(void)
 {
 
-/* USER CODE BEGIN ADC1_Init 0 */
+  /* USER CODE BEGIN ADC1_Init 0 */
 
-/* USER CODE END ADC1_Init 0 */
+  /* USER CODE END ADC1_Init 0 */
 
-ADC_ChannelConfTypeDef sConfig = {0};
+  ADC_ChannelConfTypeDef sConfig = {0};
 
-/* USER CODE BEGIN ADC1_Init 1 */
+  /* USER CODE BEGIN ADC1_Init 1 */
 
-/* USER CODE END ADC1_Init 1 */
+  /* USER CODE END ADC1_Init 1 */
 
-/** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
-*/
-hadc1.Instance = ADC1;
-hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
-hadc1.Init.Resolution = ADC_RESOLUTION_12B;
-hadc1.Init.ScanConvMode = ENABLE;
-hadc1.Init.ContinuousConvMode = DISABLE;
-hadc1.Init.DiscontinuousConvMode = ENABLE;
-hadc1.Init.NbrOfDiscConversion = 1;
-hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
-hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
-hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-hadc1.Init.NbrOfConversion = 1;
-hadc1.Init.DMAContinuousRequests = DISABLE;
-hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
-if (HAL_ADC_Init(&hadc1) != HAL_OK)
-{
-  Error_Handler();
+  /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
+  */
+  hadc1.Instance = ADC1;
+  hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
+  hadc1.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc1.Init.ScanConvMode = ENABLE;
+  hadc1.Init.ContinuousConvMode = DISABLE;
+  hadc1.Init.DiscontinuousConvMode = ENABLE;
+  hadc1.Init.NbrOfDiscConversion = 1;
+  hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  hadc1.Init.NbrOfConversion = 1;
+  hadc1.Init.DMAContinuousRequests = DISABLE;
+  hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+  if (HAL_ADC_Init(&hadc1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
+  */
+  sConfig.Channel = ADC_CHANNEL_0;
+  sConfig.Rank = 1;
+  sConfig.SamplingTime = ADC_SAMPLETIME_15CYCLES;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN ADC1_Init 2 */
+
+  /* USER CODE END ADC1_Init 2 */
+
 }
 
-/** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
-*/
-sConfig.Channel = ADC_CHANNEL_0;
-sConfig.Rank = 1;
-sConfig.SamplingTime = ADC_SAMPLETIME_15CYCLES;
-if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-{
-  Error_Handler();
-}
-/* USER CODE BEGIN ADC1_Init 2 */
-
-/* USER CODE END ADC1_Init 2 */
-
-}
-
-
-
-
-
+/**
+  * @brief SPI2 Initialization Function
+  * @param None
+  * @retval None
+  */
 static void MX_SPI2_Init(void)
 {
 
@@ -256,6 +255,11 @@ static void MX_SPI2_Init(void)
 
 }
 
+/**
+  * @brief TIM1 Initialization Function
+  * @param None
+  * @retval None
+  */
 
 static void MX_TIM1_Init(void)
 {
@@ -298,8 +302,11 @@ static void MX_TIM1_Init(void)
 
 }
 
-
-
+/**
+  * @brief USART1 Initialization Function
+  * @param None
+  * @retval None
+  */
 static void MX_USART1_UART_Init(void)
 {
 
@@ -328,7 +335,11 @@ static void MX_USART1_UART_Init(void)
 
 }
 
-
+/**
+  * @brief GPIO Initialization Function
+  * @param None
+  * @retval None
+  */
 static void MX_GPIO_Init(void)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
@@ -420,31 +431,7 @@ static void MX_GPIO_Init(void)
 /* USER CODE END MX_GPIO_Init_2 */
 }
 
-
 /* USER CODE BEGIN 4 */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-
-    if (htim->Instance == TIM1)
-    {
-    	utils.print("TimeVal: %d \r\n", timeValue);
-    	timeValue++;
-    }
-}
-
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-    if (GPIO_Pin == GPIO_PIN_11) {
-    //  UART_Printf("Internet connection lost \r\n");
-    }
-}
-
-
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-    if (huart->Instance == USART1) {
-      //utils.print("Interrupt has been recieved! \r\n");
-       uartHandler.onReceive();
-    }
-}
 
 /* USER CODE END 4 */
 
