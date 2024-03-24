@@ -46,7 +46,6 @@ float MuxSelect::adcValueToVoltage(uint32_t adcValue, uint8_t resolution, float 
 }
 
 
-
 AnalogReadings MuxSelect::SwitchAnalog() {
     static AnalogReadings readings; // Static to maintain lifetime beyond the function call
 

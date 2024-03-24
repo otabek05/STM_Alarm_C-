@@ -156,7 +156,7 @@ void Utils::createJSON(std::string *message) {
     for (int i = 0; i < 8; i++) {
         float status = analogValue.values[i]; // Placeholder, adjust according to your implementation
         char formattedStatus[32]; // Buffer to hold the formatted float string
-        snprintf(formattedStatus, sizeof(formattedStatus), "%.2f", status);
+        snprintf(formattedStatus, sizeof(formattedStatus), "%d,%.2f", i+1, status);
         cJSON_AddStringToObject(aiObj, conf->getAnalogInputName(i).c_str(), formattedStatus);
     }
 

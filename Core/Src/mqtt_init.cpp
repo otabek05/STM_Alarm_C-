@@ -153,7 +153,7 @@ void MQTTConnection::handleIncomingMessage(MessageData* data) {
 				    int arrayIndex = number->valueint - 1;
 				    PortAndPins targetSwitch = utils->switches[arrayIndex];
 				    bool success = utils->switchRelay(targetSwitch.port, targetSwitch.pin, status->valueint);
-				    if (success) {
+				     if (success) {
 				    	  utils->print("The %d switch has been toggled.\r\n", number->valueint);
 				  } else {
 				    	utils->print("There is an issue with switch \r\n");

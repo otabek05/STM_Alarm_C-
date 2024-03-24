@@ -8,7 +8,7 @@ Config::Config(){
 
 void Config::init() {
 
-    setBrokerIP({172, 30,1,29});
+    setBrokerIP({192, 168, 200, 158});
     setBrokerPort(1883);
     setIP({192, 168, 200, 158});
     setGateway({172, 30, 1, 254});

@@ -63,27 +63,29 @@ int main(void)
   MX_USART1_UART_Init();
   MX_ADC1_Init();
   MX_TIM1_Init();
-  /* USER CODE BEGIN 2 */
+
   HAL_TIM_Base_Start_IT(&htim1);
 
 
- muxSelect.init(&hadc1);
+  muxSelect.init(&hadc1);
 
- config.init();
+  config.init();
 
- utils.init(&config, &muxSelect);
+  utils.init(&config, &muxSelect);
 
- ethManager.init(&config, &utils);
+  ethManager.init(&config, &utils);
 
- mqttClient.init(&config, &utils);
+  mqttClient.init(&config, &utils);
 
- uartHandler.init(&huart1, &utils, &config);
+  uartHandler.init(&huart1, &utils, &config);
 
 
 
 
   while (true)
   {
+
+
 	mqttClient.mqttYield();
 	uartHandler.processReceivedData();
 
@@ -94,6 +96,7 @@ int main(void)
 		   }
 
 		  }
+
 
 
 	if (timeValue == static_cast<int>(config.getIntervalTime())) {
@@ -110,15 +113,13 @@ int main(void)
 				mqttClient.publish(statusJsonBuffer);
 			}else {
 			    mqttClient.init(&config, &utils);
+			    mqttClient.connect();
 			}
 		}
 
 		timeValue = 0;
 
 	}
-
-
-
 
 
 // While loop ends
