@@ -264,16 +264,9 @@ static void MX_SPI2_Init(void)
 static void MX_TIM1_Init(void)
 {
 
-  /* USER CODE BEGIN TIM1_Init 0 */
-
-  /* USER CODE END TIM1_Init 0 */
-
   TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
 
-  /* USER CODE BEGIN TIM1_Init 1 */
-
-  /* USER CODE END TIM1_Init 1 */
   htim1.Instance = TIM1;
   htim1.Init.Prescaler = 8400;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
@@ -296,9 +289,7 @@ static void MX_TIM1_Init(void)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN TIM1_Init 2 */
 
-  /* USER CODE END TIM1_Init 2 */
 
 }
 
@@ -393,10 +384,9 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin : NetworkStatus_Pin */
   GPIO_InitStruct.Pin = NetworkStatus_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(NetworkStatus_GPIO_Port, &GPIO_InitStruct);
-
   /*Configure GPIO pin : W5500_CS_Pin */
   GPIO_InitStruct.Pin = W5500_CS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -438,7 +428,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
     if (GPIO_Pin == GPIO_PIN_11) {
-    //  UART_Printf("Internet connection lost \r\n");
+     utils.print("Interrupt has been arrived \r\n");
     }
 }
 

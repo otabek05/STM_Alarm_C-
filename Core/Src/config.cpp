@@ -8,7 +8,7 @@ Config::Config(){
 
 void Config::init() {
 
-    setBrokerIP({192, 168, 200, 158});
+    setBrokerIP({175, 210, 42,26});
     setBrokerPort(1883);
     setIP({192, 168, 200, 158});
     setGateway({172, 30, 1, 254});
@@ -16,6 +16,7 @@ void Config::init() {
     setDNS({8, 8, 8, 8}); // Google's DNS for example
     setKeepAliveInterval(60);
     setDHCPEnabled(true);
+    setExtentionEnabled(false);
     setIntervalTime(2); // Example interval time
 
     setUsername("user");
@@ -302,6 +303,8 @@ std::array<uint8_t, 4> Config::getDNS() const { return dns; }
 uint16_t Config::getKeepAliveInterval() const { return keep_alive_interval; }
 bool Config::getDHCPEnabled() const { return dhcp_enabled; }
 bool Config::getIpAssigned() const {return ip_assigned;}
+bool Config::getExtentionEnabled() const {return extentionEnabled;}
+
 uint32_t Config::getIntervalTime()  const { return interval_time;}
 std::string Config::getUsername()const { return username; }
 std::string Config::getClientId()const  { return clientId; }
@@ -323,6 +326,7 @@ void Config::setDNS(const std::array<uint8_t, 4>& value) { dns = value; }
 void Config::setKeepAliveInterval(uint16_t value) { keep_alive_interval = value; }
 void Config::setDHCPEnabled(bool value) { dhcp_enabled = value; }
 void Config::setIpAssigned(bool value) {ip_assigned = value;}
+void Config::setExtentionEnabled(bool value) {extentionEnabled = value;}
 void Config::setIntervalTime(uint32_t value) { interval_time = value; }
 
 void Config::setUsername(const std::string& value) { username = value; }

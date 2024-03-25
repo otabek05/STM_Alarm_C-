@@ -82,57 +82,6 @@ int Utils::readGPIOPinState(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin){
 	return HAL_GPIO_ReadPin(GPIOx, GPIO_Pin) == GPIO_PIN_RESET ? 0 : 1;
 }
 
-/*
-void Utils::createJSON(std::string *message) {
-    cJSON *root = cJSON_CreateObject();
-    cJSON *aiArray = cJSON_CreateArray();
-    cJSON *diArray = cJSON_CreateArray();
-    cJSON *doArray = cJSON_CreateArray();
-
-    AnalogReadings analogValue = mux->SwitchAnalog();
-    for (int i = 0; i < 8; i++) {
-        cJSON *obj = cJSON_CreateObject();
-        int status = readGPIOPinState(switches[i].port, switches[i].pin);
-        cJSON_AddNumberToObject(obj, conf->getDigitalOutputName(i).c_str(), status);
-        cJSON_AddItemToArray(doArray, obj);
-    }
-
-    for (int i = 0; i < 16; i++) {
-        cJSON *obj = cJSON_CreateObject();
-        int status = readGPIOPinState(digitalInputs[i].port, digitalInputs[i].pin);
-        cJSON_AddNumberToObject(obj, conf->getDigitalInputName(i).c_str(), status);
-        cJSON_AddItemToArray(diArray, obj);
-    }
-
-
-    for (int i = 0; i < 8; i++) {
-        cJSON *obj = cJSON_CreateObject();
-        float status = analogValue.values[i]; // Placeholder, adjust according to your implementation
-        char formattedStatus[32]; // Buffer to hold the formatted float string
-
-        snprintf(formattedStatus, sizeof(formattedStatus), "%.2f", status);
-      //  print("Analog Float: %s  AnalogNumber: %d\r\n", formattedStatus, i);
-
-        // Add the formatted string to the JSON object
-        cJSON_AddStringToObject(obj, conf->getAnalogInputName(i).c_str(), formattedStatus);
-        cJSON_AddItemToArray(aiArray, obj);
-    }
-
-    cJSON_AddItemToObject(root, "ai", aiArray);
-    cJSON_AddItemToObject(root, "di", diArray);
-    cJSON_AddItemToObject(root, "do", doArray);
-    cJSON_AddStringToObject(root, "mac", conf->getClientId().c_str());
-
-    // Print and assign the JSON string
-    char* json_string = cJSON_Print(root);
-    if (json_string != nullptr) {
-        *message = json_string;
-        free(json_string); // Free the allocated memory
-    }
-    cJSON_Delete(root); // Clean up the cJSON object
-}
-*/
-
 
 void Utils::createJSON(std::string *message) {
     cJSON *root = cJSON_CreateObject();
@@ -143,14 +92,20 @@ void Utils::createJSON(std::string *message) {
 
     AnalogReadings analogValue = mux->SwitchAnalog();
 
-    for (int i = 0; i < 8; i++) {
+    uint8_t lenrelay = conf->getExtentionEnabled() ? 8 : 4;
+    for (int i = 0; i < lenrelay; i++) {
+    	char formattedStr[32];
         int status = readGPIOPinState(switches[i].port, switches[i].pin);
-        cJSON_AddNumberToObject(doObj, conf->getDigitalOutputName(i).c_str(), status);
+        snprintf(formattedStr, sizeof(formattedStr), "%d,%d", i+1, status);
+        cJSON_AddStringToObject(doObj, conf->getDigitalOutputName(i).c_str(), formattedStr);
     }
+    uint8_t len = conf->getExtentionEnabled() ? 16 : 8;
+    for (int i = 0; i < len; i++) {
 
-    for (int i = 0; i < 16; i++) {
+    	char formattedStr[32];
         int status = readGPIOPinState(digitalInputs[i].port, digitalInputs[i].pin);
-        cJSON_AddNumberToObject(diObj, conf->getDigitalInputName(i).c_str(), status);
+    	snprintf(formattedStr, sizeof(formattedStr), "%d,%d", i+1, status);
+        cJSON_AddStringToObject(diObj, conf->getDigitalInputName(i).c_str(),formattedStr);
     }
 
     for (int i = 0; i < 8; i++) {
@@ -193,6 +148,7 @@ void Utils::createUSARTRealTime(std::string *messsage) {
 		list[0] += formattedStatus;
 	}
 
+	//uint8_t len = conf->getExtentionEnabled() ? 16 : 8;
 	for (size_t i = 0; i < 16; i ++) {
 		int status = readGPIOPinState(digitalInputs[i].port, digitalInputs[i].pin);
 		if (i > 0 ) {
@@ -201,6 +157,7 @@ void Utils::createUSARTRealTime(std::string *messsage) {
 		list[1] += std::to_string(status);
 	}
 
+	//uint8_t relayLen = conf->getExtentionEnabled() ? 8 : 4;
 	for (size_t i = 0; i < 8;  i++) {
 		int status = readGPIOPinState(switches[i].port, switches[i].pin);
 		if (i > 0 ) {

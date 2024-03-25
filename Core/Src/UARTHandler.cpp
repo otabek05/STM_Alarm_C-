@@ -113,15 +113,24 @@ void UARTHandler::processReceivedData() {
                 	break;
                 }
                 case RELAY_NAME: {
+                	utils->playSound();
                 	config->setRelayNamesFromJson(json);
             //    	utils->print("Relay Names has been arrived!!! \r\n");
                 	break;
                 }
 
                 case RELAY_SWITCH: {
+                	//utils->playSound();
                 	utils->usartSwitch(item);
               //  	utils->print("Relay Switch has been arrived \r\n");
                 	break;
+                }
+                case EXTENTION_STATUS:{
+                	utils->playSound();
+                	bool status = item->valueint == 1 ? true : false;
+                	utils->print("STATUS: %d \r\n", item->valueint);
+                    config->setExtentionEnabled(status);
+                    utils->print("3;%d", config->getExtentionEnabled());
                 }
                 default: {
                     // Handle unknown type

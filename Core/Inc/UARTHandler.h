@@ -18,6 +18,7 @@ extern "C" {
 #define DIGITAL_NAME 6
 #define RELAY_NAME 7
 #define RELAY_SWITCH 8
+#define EXTENTION_STATUS 9
 
 
 

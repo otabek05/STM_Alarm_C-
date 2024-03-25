@@ -32,6 +32,7 @@ public:
     uint16_t getKeepAliveInterval() const;
     bool getDHCPEnabled() const;
     bool getIpAssigned() const;
+    bool getExtentionEnabled() const;
     uint32_t getIntervalTime() const;
     std::string getUsername() const;
     std::string getClientId() const;
@@ -53,6 +54,7 @@ public:
     void setKeepAliveInterval(uint16_t value);
     void setDHCPEnabled(bool value);
     void setIpAssigned(bool value);
+    void setExtentionEnabled(bool val);
     void setIntervalTime(uint32_t value);
     void setUsername(const std::string& value);
     void setClientId(const std::string& value);
@@ -93,6 +95,7 @@ private:
     uint16_t keep_alive_interval;
     bool dhcp_enabled;
     bool ip_assigned = false;
+    bool extentionEnabled = false;
     uint32_t interval_time;
     std::string username;
     std::string clientId;
