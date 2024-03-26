@@ -101,10 +101,10 @@ void Utils::createJSON(std::string *message) {
     }
     uint8_t len = conf->getExtentionEnabled() ? 16 : 8;
     for (int i = 0; i < len; i++) {
-
     	char formattedStr[32];
         int status = readGPIOPinState(digitalInputs[i].port, digitalInputs[i].pin);
-    	snprintf(formattedStr, sizeof(formattedStr), "%d,%d", i+1, status);
+        int finalStatus = status == 1 ? 0 : 1;
+    	snprintf(formattedStr, sizeof(formattedStr), "%d,%d", i+1, finalStatus);
         cJSON_AddStringToObject(diObj, conf->getDigitalInputName(i).c_str(),formattedStr);
     }
 
@@ -229,59 +229,5 @@ void Utils::usartSwitch(cJSON* data) {
     }
 }
 
-/*
-
-void print(const char* fmt, ...){
-	 char buff[256];
-	 va_list args;
-	 va_start(args, fmt);
-	 vsnprintf(buff, sizeof(buff), fmt, args);
-	 HAL_UART_Transmit(&huart1, (uint8_t*)buff, strlen(buff),
-	                      HAL_MAX_DELAY);
-	 va_end(args);
-}
-
-*/
 
 
-
-/*
-void print(const char* fmt, ...) {
-    char formattedString[1024];
-    va_list args;
-
-    // Start variadic arguments handling.
-    va_start(args, fmt);
-    // Format the string according to the arguments passed.
-    vsnprintf(formattedString, sizeof(formattedString), fmt, args);
-    // End variadic arguments handling.
-    va_end(args);
-
-    // Create a JSON object.
-    cJSON *root = cJSON_CreateObject();
-
-    // Check if root creation was successful.
-    if (root == NULL) {
-        return;
-    }
-
-    // Add "type" and "data" to the JSON object.
-    cJSON_AddItemToObject(root, "type", cJSON_CreateString("console"));
-    cJSON_AddItemToObject(root, "data", cJSON_CreateString(formattedString));
-
-    // Convert the JSON object to a string.
-    char *jsonString = cJSON_PrintUnformatted(root);
-    if (jsonString == NULL) {
-        cJSON_Delete(root); // Ensure memory is freed on failure.
-        return;
-    }
-
-    // Transmit the JSON string over UART.
-    HAL_UART_Transmit(&huart1, (uint8_t*)jsonString, strlen(jsonString), HAL_MAX_DELAY);
-
-    // Free the JSON string and delete the cJSON object to free memory.
-    cJSON_free(jsonString);
-    cJSON_Delete(root);
-}
-
-*/

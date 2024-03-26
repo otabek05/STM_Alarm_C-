@@ -209,7 +209,10 @@ void Config::setAnalogInputNamesFromJson(cJSON* jsonData) {
     cJSON_ArrayForEach(analogInputJson, analogInputsJson) {
         if (cJSON_IsString(analogInputJson) && (analogInputJson->valuestring != NULL)) {
             if (index < MAX_ANALOG_INPUTS) {
+                size_t len = strlen(analogInputJson->valuestring);
+                if (len >= 2 && len < 10) {
                 analogInputs[index] = std::string(analogInputJson->valuestring);
+                }
                 ++index;
             } else {
                 break; // More items in the list than MAX_ANALOG_INPUTS, handle as needed
@@ -237,15 +240,18 @@ void Config::setDigitalInputNamesFromJson(cJSON* jsonData) {
 
     // Iterate over the analog input names array
     cJSON_ArrayForEach(digitalInputJson, digitalInputsJson) {
-        if (cJSON_IsString(digitalInputJson) && (digitalInputJson->valuestring != NULL)) {
-            if (index < MAX_DIGITAL_INPUTS) {
-                digitalInputs[index] = std::string(digitalInputJson->valuestring);
-                ++index;
-            } else {
-                break; // More items in the list than MAX_ANALOG_INPUTS, handle as needed
+            if (cJSON_IsString(digitalInputJson) && (digitalInputJson->valuestring != NULL)) {
+                size_t valueStringLength = strlen(digitalInputJson->valuestring);
+                // Check if the string length is within the specified bounds
+                if (valueStringLength >= 2 && valueStringLength <= 8) {
+                    if (index < MAX_DIGITAL_INPUTS) {
+                        digitalInputs[index] = std::string(digitalInputJson->valuestring);
+                    }
+                     ++index;
+                }
+                // Optionally, handle the case where the string does not meet the length requirements
             }
         }
-    }
 
     setDigitalInputNames(digitalInputs);
 }
@@ -269,7 +275,11 @@ void Config:: setRelayNamesFromJson(cJSON* jsonData){
 	    cJSON_ArrayForEach(Json, JsonData) {
 	        if (cJSON_IsString(Json) && (Json->valuestring != NULL)) {
 	            if (index < MAX_DIGITAL_OUTPUTS) {
+	            	size_t len = strlen(Json->valuestring);
+	            	if (len >= 2 && len < 10) {
+
 	                relayList[index] = std::string(Json->valuestring);
+	            	}
 	                ++index;
 	            } else {
 	                break; // More items in the list than MAX_ANALOG_INPUTS, handle as needed

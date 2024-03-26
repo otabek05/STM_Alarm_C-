@@ -145,21 +145,31 @@ void MQTTConnection::handleIncomingMessage(MessageData* data) {
 	    	utils->print("Relay Names has been changed!! \r\n");
 	    	utils->playSound();
 	    	break;
-	    case 4:
-		    const cJSON *number = cJSON_GetObjectItemCaseSensitive(json, "number");
-			const cJSON *status = cJSON_GetObjectItemCaseSensitive(json, "status");
-			if (!cJSON_IsNumber(number) && !cJSON_IsNumber(status)) return;
-			if (number->valueint >= 1 && number->valueint <= 8) {
-				    int arrayIndex = number->valueint - 1;
-				    PortAndPins targetSwitch = utils->switches[arrayIndex];
-				    bool success = utils->switchRelay(targetSwitch.port, targetSwitch.pin, status->valueint);
-				     if (success) {
-				    	  utils->print("The %d switch has been toggled.\r\n", number->valueint);
-				  } else {
-				    	utils->print("There is an issue with switch \r\n");
-		          }
-		    }
-			break;
+	    case 4: {
+	            const cJSON *number = cJSON_GetObjectItemCaseSensitive(json, "number");
+	            const cJSON *status = cJSON_GetObjectItemCaseSensitive(json, "status");
+	            if (!cJSON_IsNumber(number) || !cJSON_IsNumber(status)) return; // Changed && to || based on your logic needs
+	            if (number->valueint >= 1 && number->valueint <= 8) {
+	                int arrayIndex = number->valueint - 1;
+	                PortAndPins targetSwitch = utils->switches[arrayIndex];
+	                bool success = utils->switchRelay(targetSwitch.port, targetSwitch.pin, status->valueint != 0); // Using the value as a bool
+	                if (success) {
+	                    utils->print("The %d switch has been toggled.\r\n", number->valueint);
+	                } else {
+	                    utils->print("There is an issue with switch \r\n");
+	                }
+	            }
+	        } break;
+	    case 5: {
+	    	       const cJSON *main = cJSON_GetObjectItemCaseSensitive(json, "extention_port_status");
+	    	       if (!cJSON_IsNumber(main)) return;
+	    	       if (main->valueint == 0 || main->valueint == 1) {
+	    	           config->setExtentionEnabled(main->valueint != 0); // Directly using the value as a bool
+	    	           utils->playSound();
+	    	       }
+	    	   } break;
+	    default:
+	    	break;
 	    }
 
 	    cJSON_Delete(json);
