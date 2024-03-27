@@ -5,70 +5,70 @@ C:\ST\STM32CubeIDE_1.14.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.external
 C:\ST\STM32CubeIDE_1.14.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235\tools\bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/include/c++/11.3.1/array:95:12:std::array<std::__cxx11::basic_string<char>, 8>::~array()	24	static
 C:\ST\STM32CubeIDE_1.14.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235\tools\bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/include/c++/11.3.1/array:95:12:std::array<std::__cxx11::basic_string<char>, 16>::array()	24	static
 C:\ST\STM32CubeIDE_1.14.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235\tools\bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/include/c++/11.3.1/array:95:12:std::array<std::__cxx11::basic_string<char>, 16>::~array()	24	static
-../Core/Src/config.cpp:19:1:Config::Config()	16	static
-../Core/Src/config.cpp:23:6:void Config::init(AT24C*)	16	static
-../Core/Src/config.cpp:31:6:void Config::setUp()	1048	static
-../Core/Src/config.cpp:69:13:std::string Config::getAnalogInputName(int)	24	static
-../Core/Src/config.cpp:73:13:std::string Config::getDigitalInputName(int)	24	static
-../Core/Src/config.cpp:77:13:std::string Config::getDigitalOutputName(int)	24	static
-../Core/Src/config.cpp:81:6:void Config::initmqttConfig()	104	static
-../Core/Src/config.cpp:103:13:std::string createListString(std::array<unsigned char, 4>)	48	static
-../Core/Src/config.cpp:117:13:std::string createStringFromArray(std::array<std::__cxx11::basic_string<char>, 16>)	48	static
-../Core/Src/config.cpp:134:13:std::string createStringFromArray8len(std::array<std::__cxx11::basic_string<char>, 8>)	48	static
+../Core/Src/config.cpp:29:1:Config::Config()	16	static
+../Core/Src/config.cpp:33:6:void Config::init(AT24C*)	16	static
+../Core/Src/config.cpp:41:6:void Config::setUp()	344	static
+../Core/Src/config.cpp:84:13:std::string Config::getAnalogInputName(int)	24	static
+../Core/Src/config.cpp:88:13:std::string Config::getDigitalInputName(int)	24	static
+../Core/Src/config.cpp:92:13:std::string Config::getDigitalOutputName(int)	24	static
+../Core/Src/config.cpp:96:6:void Config::initmqttConfig()	104	static
+../Core/Src/config.cpp:118:13:std::string createListString(std::array<unsigned char, 4>)	48	static
+../Core/Src/config.cpp:132:13:std::string createStringFromArray(std::array<std::__cxx11::basic_string<char>, 16>)	48	static
+../Core/Src/config.cpp:149:13:std::string createStringFromArray8len(std::array<std::__cxx11::basic_string<char>, 8>)	48	static
 C:\ST\STM32CubeIDE_1.14.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235\tools\bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/include/c++/11.3.1/array:95:12:std::array<std::__cxx11::basic_string<char>, 11>::array()	24	static
 C:\ST\STM32CubeIDE_1.14.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235\tools\bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/include/c++/11.3.1/array:95:12:std::array<std::__cxx11::basic_string<char>, 11>::~array()	24	static
-../Core/Src/config.cpp:149:7:char* Config::getInfoList()	1432	static
-../Core/Src/config.cpp:179:24:std::array<unsigned char, 4> Config::extractIPAddress(cJSON*, const char*)	56	static
-../Core/Src/config.cpp:195:6:void Config::setNetworkSettings(cJSON*)	40	static
-../Core/Src/config.cpp:214:6:void Config::setMQTTBroker(cJSON*)	32	static
-../Core/Src/config.cpp:227:6:void Config::setAnalogInputNamesFromJson(cJSON*)	264	static
-../Core/Src/config.cpp:260:6:void Config::setDigitalInputNamesFromJson(cJSON*)	456	static
-../Core/Src/config.cpp:293:6:void Config::setRelayNamesFromJson(cJSON*)	264	static
-../Core/Src/config.cpp:326:6:void Config::setDHCPNetworkConfig(wiz_NetInfo*)	32	static
-../Core/Src/config.cpp:340:24:std::array<unsigned char, 4> Config::getBrokerIP() const	24	static
-../Core/Src/config.cpp:341:10:uint16_t Config::getBrokerPort() const	16	static
-../Core/Src/config.cpp:342:24:std::array<unsigned char, 4> Config::getIP() const	24	static
-../Core/Src/config.cpp:343:24:std::array<unsigned char, 4> Config::getGateway() const	24	static
-../Core/Src/config.cpp:344:24:std::array<unsigned char, 4> Config::getSubnet() const	24	static
-../Core/Src/config.cpp:345:24:std::array<unsigned char, 4> Config::getDNS() const	24	static
-../Core/Src/config.cpp:346:10:uint16_t Config::getKeepAliveInterval() const	16	static
-../Core/Src/config.cpp:347:6:bool Config::getDHCPEnabled() const	16	static
-../Core/Src/config.cpp:348:6:bool Config::getIpAssigned() const	16	static
-../Core/Src/config.cpp:349:6:bool Config::getExtentionEnabled() const	16	static
-../Core/Src/config.cpp:351:10:uint32_t Config::getIntervalTime() const	16	static
-../Core/Src/config.cpp:352:13:std::string Config::getUsername() const	16	static
-../Core/Src/config.cpp:353:13:std::string Config::getClientId() const	16	static
-../Core/Src/config.cpp:354:13:std::string Config::getPassword() const	16	static
-../Core/Src/config.cpp:355:13:std::string Config::getTopicSubscribe() const	16	static
-../Core/Src/config.cpp:356:13:std::string Config::getTopicPublish() const	16	static
-../Core/Src/config.cpp:357:5:int Config::getQoS() const	16	static
+../Core/Src/config.cpp:164:7:char* Config::getInfoList()	1432	static
+../Core/Src/config.cpp:194:24:std::array<unsigned char, 4> Config::extractIPAddress(cJSON*, const char*)	56	static
+../Core/Src/config.cpp:210:6:void Config::setNetworkSettings(cJSON*)	40	static
+../Core/Src/config.cpp:229:6:void Config::setMQTTBroker(cJSON*)	32	static
+../Core/Src/config.cpp:242:6:void Config::setAnalogInputNamesFromJson(cJSON*)	264	static
+../Core/Src/config.cpp:275:6:void Config::setDigitalInputNamesFromJson(cJSON*)	456	static
+../Core/Src/config.cpp:308:6:void Config::setRelayNamesFromJson(cJSON*)	264	static
+../Core/Src/config.cpp:341:6:void Config::setDHCPNetworkConfig(wiz_NetInfo*)	32	static
+../Core/Src/config.cpp:355:24:std::array<unsigned char, 4> Config::getBrokerIP() const	24	static
+../Core/Src/config.cpp:356:10:uint16_t Config::getBrokerPort() const	16	static
+../Core/Src/config.cpp:357:24:std::array<unsigned char, 4> Config::getIP() const	24	static
+../Core/Src/config.cpp:358:24:std::array<unsigned char, 4> Config::getGateway() const	24	static
+../Core/Src/config.cpp:359:24:std::array<unsigned char, 4> Config::getSubnet() const	24	static
+../Core/Src/config.cpp:360:24:std::array<unsigned char, 4> Config::getDNS() const	24	static
+../Core/Src/config.cpp:361:10:uint16_t Config::getKeepAliveInterval() const	16	static
+../Core/Src/config.cpp:362:6:bool Config::getDHCPEnabled() const	16	static
+../Core/Src/config.cpp:363:6:bool Config::getIpAssigned() const	16	static
+../Core/Src/config.cpp:364:6:bool Config::getExtentionEnabled() const	16	static
+../Core/Src/config.cpp:366:10:uint32_t Config::getIntervalTime() const	16	static
+../Core/Src/config.cpp:367:13:std::string Config::getUsername() const	16	static
+../Core/Src/config.cpp:368:13:std::string Config::getClientId() const	16	static
+../Core/Src/config.cpp:369:13:std::string Config::getPassword() const	16	static
+../Core/Src/config.cpp:370:13:std::string Config::getTopicSubscribe() const	16	static
+../Core/Src/config.cpp:371:13:std::string Config::getTopicPublish() const	16	static
+../Core/Src/config.cpp:372:5:int Config::getQoS() const	16	static
 C:\ST\STM32CubeIDE_1.14.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235\tools\bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/include/c++/11.3.1/array:95:12:std::array<std::__cxx11::basic_string<char>, 8>::array(const std::array<std::__cxx11::basic_string<char>, 8>&)	32	static
-../Core/Src/config.cpp:358:44:std::array<std::__cxx11::basic_string<char>, 8> Config::getAnalogInputNames()	16	static
+../Core/Src/config.cpp:373:44:std::array<std::__cxx11::basic_string<char>, 8> Config::getAnalogInputNames()	16	static
 C:\ST\STM32CubeIDE_1.14.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235\tools\bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/include/c++/11.3.1/array:95:12:std::array<std::__cxx11::basic_string<char>, 16>::array(const std::array<std::__cxx11::basic_string<char>, 16>&)	32	static
-../Core/Src/config.cpp:359:45:std::array<std::__cxx11::basic_string<char>, 16> Config::getDigitalInputNames()	16	static
-../Core/Src/config.cpp:360:46:std::array<std::__cxx11::basic_string<char>, 8> Config::getDigitalOutputNames()	16	static
-../Core/Src/config.cpp:363:6:void Config::setBrokerIP(const std::array<unsigned char, 4>&)	16	static
-../Core/Src/config.cpp:367:6:void Config::setBrokerPort(uint16_t)	16	static
-../Core/Src/config.cpp:371:6:void Config::setIP(const std::array<unsigned char, 4>&)	16	static
-../Core/Src/config.cpp:375:6:void Config::setGateway(const std::array<unsigned char, 4>&)	16	static
-../Core/Src/config.cpp:380:6:void Config::setSubnet(const std::array<unsigned char, 4>&)	16	static
-../Core/Src/config.cpp:384:6:void Config::setDNS(const std::array<unsigned char, 4>&)	16	static
-../Core/Src/config.cpp:388:6:void Config::setKeepAliveInterval(uint16_t)	16	static
-../Core/Src/config.cpp:391:6:void Config::setDHCPEnabled(bool)	16	static
-../Core/Src/config.cpp:396:6:void Config::setIpAssigned(bool)	16	static
-../Core/Src/config.cpp:397:6:void Config::setExtentionEnabled(bool)	16	static
-../Core/Src/config.cpp:401:6:void Config::setIntervalTime(uint32_t)	16	static
-../Core/Src/config.cpp:407:6:void Config::setUsername(const string&)	16	static
-../Core/Src/config.cpp:408:6:void Config::setClientId(const string&)	16	static
-../Core/Src/config.cpp:409:6:void Config::setPassword(const string&)	16	static
-../Core/Src/config.cpp:412:6:void Config::setTopicSubscribe(const string&)	16	static
-../Core/Src/config.cpp:413:6:void Config::setTopicPublish(const string&)	16	static
-../Core/Src/config.cpp:414:6:void Config::setQoS(int)	16	static
+../Core/Src/config.cpp:374:45:std::array<std::__cxx11::basic_string<char>, 16> Config::getDigitalInputNames()	16	static
+../Core/Src/config.cpp:375:46:std::array<std::__cxx11::basic_string<char>, 8> Config::getDigitalOutputNames()	16	static
+../Core/Src/config.cpp:378:6:void Config::setBrokerIP(const std::array<unsigned char, 4>&)	16	static
+../Core/Src/config.cpp:382:6:void Config::setBrokerPort(uint16_t)	16	static
+../Core/Src/config.cpp:386:6:void Config::setIP(const std::array<unsigned char, 4>&)	16	static
+../Core/Src/config.cpp:390:6:void Config::setGateway(const std::array<unsigned char, 4>&)	16	static
+../Core/Src/config.cpp:395:6:void Config::setSubnet(const std::array<unsigned char, 4>&)	16	static
+../Core/Src/config.cpp:399:6:void Config::setDNS(const std::array<unsigned char, 4>&)	16	static
+../Core/Src/config.cpp:403:6:void Config::setKeepAliveInterval(uint16_t)	16	static
+../Core/Src/config.cpp:406:6:void Config::setDHCPEnabled(bool)	16	static
+../Core/Src/config.cpp:411:6:void Config::setIpAssigned(bool)	16	static
+../Core/Src/config.cpp:412:6:void Config::setExtentionEnabled(bool)	16	static
+../Core/Src/config.cpp:416:6:void Config::setIntervalTime(uint32_t)	16	static
+../Core/Src/config.cpp:422:6:void Config::setUsername(const string&)	16	static
+../Core/Src/config.cpp:423:6:void Config::setClientId(const string&)	16	static
+../Core/Src/config.cpp:424:6:void Config::setPassword(const string&)	16	static
+../Core/Src/config.cpp:427:6:void Config::setTopicSubscribe(const string&)	16	static
+../Core/Src/config.cpp:428:6:void Config::setTopicPublish(const string&)	16	static
+../Core/Src/config.cpp:429:6:void Config::setQoS(int)	16	static
 C:\ST\STM32CubeIDE_1.14.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235\tools\bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/include/c++/11.3.1/array:95:12:std::array<std::__cxx11::basic_string<char>, 8>& std::array<std::__cxx11::basic_string<char>, 8>::operator=(const std::array<std::__cxx11::basic_string<char>, 8>&)	32	static
-../Core/Src/config.cpp:415:6:void Config::setAnalogInputNames(const std::array<std::__cxx11::basic_string<char>, 8>&)	16	static
+../Core/Src/config.cpp:430:6:void Config::setAnalogInputNames(const std::array<std::__cxx11::basic_string<char>, 8>&)	16	static
 C:\ST\STM32CubeIDE_1.14.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235\tools\bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/include/c++/11.3.1/array:95:12:std::array<std::__cxx11::basic_string<char>, 16>& std::array<std::__cxx11::basic_string<char>, 16>::operator=(const std::array<std::__cxx11::basic_string<char>, 16>&)	32	static
-../Core/Src/config.cpp:416:6:void Config::setDigitalInputNames(const std::array<std::__cxx11::basic_string<char>, 16>&)	16	static
-../Core/Src/config.cpp:417:6:void Config::setDigitalOutputNames(const std::array<std::__cxx11::basic_string<char>, 8>&)	16	static
+../Core/Src/config.cpp:435:6:void Config::setDigitalInputNames(const std::array<std::__cxx11::basic_string<char>, 16>&)	16	static
+../Core/Src/config.cpp:436:6:void Config::setDigitalOutputNames(const std::array<std::__cxx11::basic_string<char>, 8>&)	16	static
 C:\ST\STM32CubeIDE_1.14.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235\tools\bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/include/c++/11.3.1/bits/charconv.h:47:5:constexpr unsigned int std::__detail::__to_chars_len(_Tp, int) [with _Tp = unsigned int]	32	static
 C:\ST\STM32CubeIDE_1.14.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235\tools\bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/include/c++/11.3.1/bits/charconv.h:72:5:void std::__detail::__to_chars_10_impl(char*, unsigned int, _Tp) [with _Tp = unsigned int]	40	static
 C:\ST\STM32CubeIDE_1.14.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235\tools\bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/include/c++/11.3.1/array:186:7:std::array<_Tp, _Nm>::value_type& std::array<_Tp, _Nm>::operator[](std::array<_Tp, _Nm>::size_type) [with _Tp = std::__cxx11::basic_string<char>; unsigned int _Nm = 8]	16	static
@@ -89,3 +89,6 @@ C:\ST\STM32CubeIDE_1.14.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.external
 C:\ST\STM32CubeIDE_1.14.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235\tools\arm-none-eabi\include\c++\11.3.1\bits\basic_string.h:6248:5:bool std::operator==(const std::__cxx11::basic_string<_CharT, _Traits, _Alloc>&, const _CharT*) [with _CharT = char; _Traits = std::char_traits<char>; _Alloc = std::allocator<char>]	16	static
 C:\ST\STM32CubeIDE_1.14.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235\tools\bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/include/c++/11.3.1/array:56:7:static constexpr _Tp& std::__array_traits<_Tp, _Nm>::_S_ref(const _Tp (&)[_Nm], std::size_t) [with _Tp = std::__cxx11::basic_string<char>; unsigned int _Nm = 11]	16	static
 C:\ST\STM32CubeIDE_1.14.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235\tools\arm-none-eabi\include\c++\11.3.1\bits\alloc_traits.h:562:7:static std::allocator_traits<std::allocator<_CharT> >::allocator_type std::allocator_traits<std::allocator<_CharT> >::select_on_container_copy_construction(const allocator_type&) [with _Tp = char]	16	static
+../Core/Src/config.cpp:436:127:void __static_initialization_and_destruction_0(int, int)	152	static
+../Core/Src/config.cpp:436:127:cpp)	8	static
+../Core/Src/config.cpp:436:127:cpp)	8	static

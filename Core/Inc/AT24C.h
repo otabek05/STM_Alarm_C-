@@ -18,6 +18,9 @@ public:
     bool WriteInt(uint16_t key, int value);
     int ReadInt(uint16_t key);
 
+    bool WriteArrayString(uint16_t key, const std::array<std::string, 8>& strings);
+    bool ReadArrayString(uint16_t key, std::array<std::string, 8>& strings);
+
 private:
     I2C_HandleTypeDef *_hi2c;
 

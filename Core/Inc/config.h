@@ -30,16 +30,17 @@ public:
 #define GATEWAY_ID           4
 #define SUBNET_ID            5
 #define DNS_ID               6
-#define KEEP_ALIVE_ID        7
 #define DHCP_ENABLED_ID      8
 #define EXTENSION_ENABLED_ID 9
 #define INTERVAL_TIME_ID     10
 #define USERNAME_ID          11
-#define CLIENT_ID_ID         12
 #define PASSWORD_ID          13
 #define TOPIC_SUBSCRIBE_ID   14
 #define TOPIC_PUBLISH_ID     15
-#define QOS_ID               16
+#define DIGITALNAME_ID             16
+#define ANALOGNAME_ID               17
+#define RELAYNAME_ID                18
+
 class AT24C;
 
 class Config {

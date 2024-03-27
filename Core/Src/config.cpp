@@ -1,7 +1,17 @@
 #include "config.h"
 
 uint8_t mac[6];
+const std::array<std::string, 8> DEFAULT_ANALOG_INPUT_NAMES = {
+    "Analog1", "Analog2", "Analog3", "Analog4",
+    "Analog5", "Analog6", "Analog7", "Analog8"};
 
+const std::array<std::string, 16> DEFAULT_DIGITAL_INPUT_NAMES = {
+    "DI1", "DI2", "DI3", "DI4", "DI5", "DI6", "DI7", "DI8",
+    "DI9", "DI10", "DI11", "DI12", "DI13", "DI14", "DI15", "DI16"};
+
+const std::array<std::string, 8> DEFAULT_DIGITAL_OUTPUT_NAMES = {
+    "Relay1", "Relay2", "Relay3", "Relay4",
+    "Relay5", "Relay6", "Relay7", "Relay8"};
 constexpr std::array<uint8_t, 4> DEFAULT_BROKER_IP = {175, 210, 42, 26};
 constexpr std::array<uint8_t, 4> DEFAULT_IP = {172, 30, 1, 122};
 constexpr std::array<uint8_t, 4> DEFAULT_GATEWAY = {172, 30, 1, 254};
@@ -30,6 +40,7 @@ void Config::init(AT24C* eepromInstance) {
 
 void Config::setUp() {
     static std::array<uint8_t, 4> ipStatic;
+
     setBrokerIP(eeprom->ReadIP(BROKER_IP_ID, ipStatic) ? ipStatic : DEFAULT_BROKER_IP);
 
     uint16_t port = eeprom->ReadInt(BROKER_PORT_ID);
@@ -44,6 +55,7 @@ void Config::setUp() {
         setSubnet(eeprom->ReadIP(SUBNET_ID, ipStatic) ? ipStatic : DEFAULT_SUBNET);
         setDNS(eeprom->ReadIP(DNS_ID, ipStatic) ? ipStatic : DEFAULT_DNS);
     }
+
 
     int extension = eeprom->ReadInt(EXTENSION_ENABLED_ID);
     setExtentionEnabled(extension == -1 ? DEFAULT_EXTENSION_ENABLED : static_cast<bool>(extension));
@@ -60,9 +72,12 @@ void Config::setUp() {
     setTopicPublish("topic/pub");
     setQoS(DEFAULT_QOS);
 
-    setAnalogInputNames({"Analog1", "Analog2", "Analog3", "Analog4", "Analog5", "Analog6", "Analog7", "Analog8"});
-    setDigitalInputNames({"DI1", "DI2", "DI3", "DI4", "DI5", "DI6", "DI7", "DI8", "DI9", "DI10", "DI11", "DI12", "DI13", "DI14", "DI15", "DI16"});
-    setDigitalOutputNames({"Relay1", "Relay2", "Relay3", "Relay4", "Relay5", "Relay6", "Relay7", "Relay8"});
+    std::array<std::string, 8> analog;
+    setAnalogInputNames(eeprom->ReadArrayString(ANALOGNAME_ID, analog) ? analog : DEFAULT_ANALOG_INPUT_NAMES);
+
+   // setAnalogInputNames({"Analog1", "Analog2", "Analog3", "Analog4", "Analog5", "Analog6", "Analog7", "Analog8"});
+    setDigitalInputNames(DEFAULT_DIGITAL_INPUT_NAMES);
+    setDigitalOutputNames(DEFAULT_DIGITAL_OUTPUT_NAMES);
 }
 
 
@@ -412,6 +427,10 @@ void Config::setPassword(const std::string& value) { password = value; }
 void Config::setTopicSubscribe(const std::string& value) { topic_subscribe = value; }
 void Config::setTopicPublish(const std::string& value) { topic_publish = value; }
 void Config::setQoS(int value) { qos = value; }
-void Config::setAnalogInputNames(const std::array<std::string, MAX_ANALOG_INPUTS>& value) { analog_input_names = value; }
+void Config::setAnalogInputNames(const std::array<std::string, MAX_ANALOG_INPUTS>& value) {
+	eeprom->WriteArrayString(ANALOGNAME_ID, value);
+	analog_input_names = value;
+
+}
 void Config::setDigitalInputNames(const std::array<std::string, MAX_DIGITAL_INPUTS>& value) { digital_input_names = value; }
 void Config::setDigitalOutputNames(const std::array<std::string, MAX_DIGITAL_OUTPUTS>& value) { digital_output_names = value; }
