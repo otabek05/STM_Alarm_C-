@@ -6,7 +6,9 @@ Config::Config(){
 
 }
 
-void Config::init() {
+void Config::init(AT24C* eepromInstance) {
+
+
 
     setBrokerIP({175, 210, 42,26});
     setBrokerPort(1883);

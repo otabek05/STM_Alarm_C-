@@ -9,11 +9,14 @@
 #include "CircularBuffer.h"
 #include "UARTHandler.h"
 #include "MuxSelect.h"
+#include "AT24C.h"
 
 
 ADC_HandleTypeDef hadc1;
 
 TIM_HandleTypeDef htim1;
+
+I2C_HandleTypeDef hi2c1;
 
 SPI_HandleTypeDef hspi2;
 
@@ -35,6 +38,7 @@ UARTHandler uartHandler;
 
 
 volatile int timeValue;
+constexpr uint16_t eepromDeviceAddress = 0x50 << 1;
 static std::string statusJsonBuffer;
 static std::string statusJsonUSARTBuffer;
 
@@ -45,10 +49,8 @@ static void MX_SPI2_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_TIM1_Init(void);
-/*
-void readADCsVoltage(float *voltageArray);
+static void MX_I2C1_Init(void);
 
-*/
 
 int main(void)
 {
@@ -63,13 +65,16 @@ int main(void)
   MX_USART1_UART_Init();
   MX_ADC1_Init();
   MX_TIM1_Init();
+  MX_I2C1_Init();
 
   HAL_TIM_Base_Start_IT(&htim1);
+
+  AT24C eeprom(&hi2c1);
 
 
   muxSelect.init(&hadc1);
 
-  config.init();
+  config.init(&eeprom);
 
   utils.init(&config, &muxSelect);
 
@@ -79,10 +84,35 @@ int main(void)
 
   uartHandler.init(&huart1, &utils, &config);
 
+  uint16_t stringKey = 1;
+      uint16_t ipKey = 2;
+      uint16_t intKey = 3;
 
+      // Write a string
+      std::string helloWorld = "Hello, World!";
+      if(eeprom.WriteString(stringKey, helloWorld)) {
+          // Read and print the string
+          std::string readString = eeprom.ReadString(stringKey);
+          utils.print("Read string: %s\n", readString.c_str());
+      }
 
+      // Write an IP address
+      std::array<uint8_t, 4> ipAddress = {192, 168, 1, 1};
+      if(eeprom.WriteIP(ipKey, ipAddress)) {
+          // Read and print the IP address
+          auto readIp = eeprom.ReadIP(ipKey);
+          utils.print("Read IP: %d.%d.%d.%d\n", readIp[0], readIp[1], readIp[2], readIp[3]);
+      }
 
+      // Write an integer
+      int intValue = 12345;
+      if(eeprom.WriteInt(intKey, intValue)) {
+          // Read and print the integer
+          int readInt = eeprom.ReadInt(intKey);
+          utils.print("Read int: %d\n", readInt);
+      }
   while (true)
+
   {
 
 
@@ -224,6 +254,35 @@ if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
 }
 
 
+
+static void MX_I2C1_Init(void)
+{
+
+  /* USER CODE BEGIN I2C1_Init 0 */
+
+  /* USER CODE END I2C1_Init 0 */
+
+  /* USER CODE BEGIN I2C1_Init 1 */
+
+  /* USER CODE END I2C1_Init 1 */
+  hi2c1.Instance = I2C1;
+  hi2c1.Init.ClockSpeed = 100000;
+  hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
+  hi2c1.Init.OwnAddress1 = 0;
+  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c1.Init.OwnAddress2 = 0;
+  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN I2C1_Init 2 */
+
+  /* USER CODE END I2C1_Init 2 */
+
+}
 
 
 

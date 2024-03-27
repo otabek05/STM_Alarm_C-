@@ -4,8 +4,7 @@
 #include <array>
 #include <string>
 #include <cstdint>
-
-
+#include "AT24C.h"
 
 extern "C" {
 #include "stm32f4xx_hal.h"
@@ -19,10 +18,13 @@ constexpr size_t MAX_ANALOG_INPUTS = 8;
 constexpr size_t MAX_DIGITAL_INPUTS = 16;
 constexpr size_t MAX_DIGITAL_OUTPUTS = 8;
 
+class AT24C;
+
 class Config {
 public:
     Config();
     // Getters
+    AT24C* eeprom;
     std::array<uint8_t, 4> getBrokerIP() const;
     uint16_t getBrokerPort() const;
     std::array<uint8_t, 4> getIP()const ;
@@ -69,7 +71,7 @@ public:
     std::string getAnalogInputName(int index);
     std::string getDigitalInputName(int index);
     std::string getDigitalOutputName(int index);
-    void init();
+    void init(AT24C* eepromInstance);
     void initmqttConfig();
     char* getInfoList();
     std::array<uint8_t, 4> extractIPAddress(cJSON* parent, const char* name);
@@ -103,6 +105,8 @@ private:
     std::string topic_subscribe;
     std::string topic_publish;
     int qos;
+
+
     std::array<std::string, MAX_ANALOG_INPUTS> analog_input_names;
     std::array<std::string, MAX_DIGITAL_INPUTS> digital_input_names;
     std::array<std::string, MAX_DIGITAL_OUTPUTS> digital_output_names;
