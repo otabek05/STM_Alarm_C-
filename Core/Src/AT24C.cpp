@@ -63,6 +63,45 @@ int AT24C::ReadInt(uint16_t key) {
     return -1; // Error or not found
 }
 
+bool AT24C::WriteDigitalInput(uint16_t key, const std::array<std::string, 16>& strings){
+	  std::vector<uint8_t> data;
+	    for (const auto& str : strings) {
+	        std::copy(str.begin(), str.end(), std::back_inserter(data));
+	        data.push_back(';'); // Delimiter
+	    }
+
+	    return WriteBytes(CalculateAddress(key), data.data(), data.size()) == HAL_OK;
+}
+
+
+bool AT24C::ReadDigitalInput(uint16_t key, std::array<std::string, 16>& strings){
+	 std::vector<uint8_t> data(1024); // Assume max total length for the strings
+	    bool readSuccess = false;
+	    size_t stringIndex = 0;
+
+	    // Attempt to read the bytes from EEPROM
+	    if (ReadBytes(CalculateAddress(key), data.data(), data.size()) == HAL_OK) {
+	        std::string currentString;
+	        for (auto byte : data) {
+	            if (byte == ';') { // Delimiter found
+	                strings[stringIndex++] = currentString;
+	                currentString.clear();
+	                readSuccess = true; // At least one string read successfully
+	                if (stringIndex == 16) break; // Array is full
+	            } else {
+	                currentString += static_cast<char>(byte);
+	            }
+	        }
+	    }
+
+	    // Clear any unused entries in the array
+	    for (size_t i = stringIndex; i < 16; ++i) {
+	        strings[i].clear();
+	    }
+
+	    return readSuccess;
+}
+
 
 bool AT24C::ReadArrayString(uint16_t key, std::array<std::string, 8 >& strings) {
     std::vector<uint8_t> data(1024); // Assume max total length for the strings

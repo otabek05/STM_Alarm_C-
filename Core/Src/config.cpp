@@ -75,9 +75,12 @@ void Config::setUp() {
     std::array<std::string, 8> analog;
     setAnalogInputNames(eeprom->ReadArrayString(ANALOGNAME_ID, analog) ? analog : DEFAULT_ANALOG_INPUT_NAMES);
 
-   // setAnalogInputNames({"Analog1", "Analog2", "Analog3", "Analog4", "Analog5", "Analog6", "Analog7", "Analog8"});
-    setDigitalInputNames(DEFAULT_DIGITAL_INPUT_NAMES);
-    setDigitalOutputNames(DEFAULT_DIGITAL_OUTPUT_NAMES);
+    std::array<std::string, 8 > relay;
+    setDigitalOutputNames(eeprom->ReadArrayString(RELAYNAME_ID, relay) ? relay : DEFAULT_DIGITAL_OUTPUT_NAMES);
+
+    std::array<std::string, MAX_DIGITAL_INPUTS> digital_input;
+    setDigitalInputNames(eeprom->ReadDigitalInput(DIGITALNAME_ID, digital_input) ? digital_input : DEFAULT_DIGITAL_INPUT_NAMES);
+
 }
 
 
@@ -432,5 +435,11 @@ void Config::setAnalogInputNames(const std::array<std::string, MAX_ANALOG_INPUTS
 	analog_input_names = value;
 
 }
-void Config::setDigitalInputNames(const std::array<std::string, MAX_DIGITAL_INPUTS>& value) { digital_input_names = value; }
-void Config::setDigitalOutputNames(const std::array<std::string, MAX_DIGITAL_OUTPUTS>& value) { digital_output_names = value; }
+void Config::setDigitalInputNames(const std::array<std::string, MAX_DIGITAL_INPUTS>& value) {
+	digital_input_names = value;
+	eeprom->WriteDigitalInput(DIGITALNAME_ID, value);
+}
+void Config::setDigitalOutputNames(const std::array<std::string, MAX_DIGITAL_OUTPUTS>& value) {
+	digital_output_names = value;
+    eeprom->WriteArrayString(RELAYNAME_ID, value);
+}
