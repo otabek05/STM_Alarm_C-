@@ -13,7 +13,7 @@ public:
     std::string ReadString(uint16_t key);
 
     bool WriteIP(uint16_t key, const std::array<uint8_t, 4>& ip);
-    std::array<uint8_t, 4> ReadIP(uint16_t key);
+    bool ReadIP(uint16_t key, std::array<uint8_t, 4>& ip);
 
     bool WriteInt(uint16_t key, int value);
     int ReadInt(uint16_t key);

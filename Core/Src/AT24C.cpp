@@ -32,10 +32,17 @@ bool AT24C::WriteIP(uint16_t key, const std::array<uint8_t, 4>& ip) {
     return WriteBytes(CalculateAddress(key), ip.data(), ip.size()) == HAL_OK;
 }
 
-std::array<uint8_t, 4> AT24C::ReadIP(uint16_t key) {
-    std::array<uint8_t, 4> ip = {0};
-    ReadBytes(CalculateAddress(key), ip.data(), ip.size());
-    return ip;
+bool AT24C::ReadIP(uint16_t key, std::array<uint8_t, 4>& ip) {
+    if (ReadBytes(CalculateAddress(key), ip.data(), ip.size()) != HAL_OK) {
+        return false; // Failed to read from EEPROM
+    }
+
+    // Check if the read IP address is {0, 0, 0, 0}
+    if (ip == std::array<uint8_t, 4>{0, 0, 0, 0}) {
+        return false; // Considered as "empty"
+    }
+
+    return true; // Successfully read a non-empty IP address
 }
 
 bool AT24C::WriteInt(uint16_t key, int value) {

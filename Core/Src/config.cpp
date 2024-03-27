@@ -2,6 +2,20 @@
 
 uint8_t mac[6];
 
+constexpr std::array<uint8_t, 4> DEFAULT_BROKER_IP = {175, 210, 42, 26};
+constexpr std::array<uint8_t, 4> DEFAULT_IP = {172, 30, 1, 122};
+constexpr std::array<uint8_t, 4> DEFAULT_GATEWAY = {172, 30, 1, 254};
+constexpr std::array<uint8_t, 4> DEFAULT_SUBNET = {255, 255, 255, 0};
+constexpr std::array<uint8_t, 4> DEFAULT_DNS = {8, 8, 8, 8};
+constexpr uint16_t DEFAULT_PORT = 1883;
+constexpr bool DEFAULT_DHCP_ENABLED = true;
+constexpr bool DEFAULT_EXTENSION_ENABLED = true;
+constexpr int DEFAULT_INTERVAL_TIME = 3;
+constexpr int KEEP_ALIVE_INTERVAL = 60;
+constexpr char DEFAULT_PASSWORD[] = "pass";
+constexpr int DEFAULT_QOS = 1;
+
+
 Config::Config(){
 
 }
@@ -9,29 +23,46 @@ Config::Config(){
 void Config::init(AT24C* eepromInstance) {
 
 
+	eeprom = eepromInstance;
 
-    setBrokerIP({175, 210, 42,26});
-    setBrokerPort(1883);
-    setIP({192, 168, 200, 158});
-    setGateway({172, 30, 1, 254});
-    setSubnet({255, 255, 255, 0});
-    setDNS({8, 8, 8, 8}); // Google's DNS for example
-    setKeepAliveInterval(60);
-    setDHCPEnabled(true);
-    setExtentionEnabled(false);
-    setIntervalTime(2); // Example interval time
 
-    setUsername("user");
-    setClientId(std::string(clientId));
+}
 
-    setPassword("pass");
+void Config::setUp() {
+    static std::array<uint8_t, 4> ipStatic;
+    setBrokerIP(eeprom->ReadIP(BROKER_IP_ID, ipStatic) ? ipStatic : DEFAULT_BROKER_IP);
+
+    uint16_t port = eeprom->ReadInt(BROKER_PORT_ID);
+    setBrokerPort(port ? port : DEFAULT_PORT);
+
+    int dhcp = eeprom->ReadInt(DHCP_ENABLED_ID);
+    setDHCPEnabled(dhcp == -1 ? DEFAULT_DHCP_ENABLED : static_cast<bool>(dhcp));
+
+    if (!getDHCPEnabled()) {
+        setIP(eeprom->ReadIP(IP_ID, ipStatic) ? ipStatic : DEFAULT_IP);
+        setGateway(eeprom->ReadIP(GATEWAY_ID, ipStatic) ? ipStatic : DEFAULT_GATEWAY);
+        setSubnet(eeprom->ReadIP(SUBNET_ID, ipStatic) ? ipStatic : DEFAULT_SUBNET);
+        setDNS(eeprom->ReadIP(DNS_ID, ipStatic) ? ipStatic : DEFAULT_DNS);
+    }
+
+    int extension = eeprom->ReadInt(EXTENSION_ENABLED_ID);
+    setExtentionEnabled(extension == -1 ? DEFAULT_EXTENSION_ENABLED : static_cast<bool>(extension));
+
+    int interval = eeprom->ReadInt(INTERVAL_TIME_ID);
+    setIntervalTime(interval == -1 ? DEFAULT_INTERVAL_TIME : interval);
+
+    setKeepAliveInterval(KEEP_ALIVE_INTERVAL);
+    setUsername("iot_devices");
+
+    std::string passwd = eeprom->ReadString(PASSWORD_ID);
+    setPassword(!passwd.empty() ? passwd : DEFAULT_PASSWORD);
+
     setTopicPublish("topic/pub");
-    setQoS(1); // Quality of Service level
+    setQoS(DEFAULT_QOS);
 
-    setAnalogInputNames({"Analog1", "Analog2", "Analog3", "Analog4", "Analog5", "Analog6", "Analog7", "Analog8",});
+    setAnalogInputNames({"Analog1", "Analog2", "Analog3", "Analog4", "Analog5", "Analog6", "Analog7", "Analog8"});
     setDigitalInputNames({"DI1", "DI2", "DI3", "DI4", "DI5", "DI6", "DI7", "DI8", "DI9", "DI10", "DI11", "DI12", "DI13", "DI14", "DI15", "DI16"});
-    setDigitalOutputNames({"Relay1", "Relay2", "Relay3", "Relay4", "Relay5", "Relay6", "Relay7", "Relay8",});
-
+    setDigitalOutputNames({"Relay1", "Relay2", "Relay3", "Relay4", "Relay5", "Relay6", "Relay7", "Relay8"});
 }
 
 
@@ -329,17 +360,49 @@ std::array<std::string, MAX_DIGITAL_INPUTS> Config::getDigitalInputNames()  { re
 std::array<std::string, MAX_DIGITAL_OUTPUTS> Config::getDigitalOutputNames()  { return digital_output_names; }
 
 // Setters
-void Config::setBrokerIP(const std::array<uint8_t, 4>& value) { broker_ip = value; }
-void Config::setBrokerPort(uint16_t value) { broker_port = value; }
-void Config::setIP(const std::array<uint8_t, 4>& value) { ip = value; }
-void Config::setGateway(const std::array<uint8_t, 4>& value) { gateway = value; }
-void Config::setSubnet(const std::array<uint8_t, 4>& value) { subnet = value; }
-void Config::setDNS(const std::array<uint8_t, 4>& value) { dns = value; }
-void Config::setKeepAliveInterval(uint16_t value) { keep_alive_interval = value; }
-void Config::setDHCPEnabled(bool value) { dhcp_enabled = value; }
+void Config::setBrokerIP(const std::array<uint8_t, 4>& value) {
+	broker_ip = value;
+    eeprom->WriteIP(BROKER_IP_ID, value);
+}
+void Config::setBrokerPort(uint16_t value) {
+	broker_port = value;
+	eeprom->WriteInt(BROKER_PORT_ID, value);
+}
+void Config::setIP(const std::array<uint8_t, 4>& value) {
+	ip = value;
+	eeprom->WriteIP(IP_ID, value);
+}
+void Config::setGateway(const std::array<uint8_t, 4>& value) {
+	gateway = value;
+    eeprom->WriteIP(GATEWAY_ID, value);
+}
+
+void Config::setSubnet(const std::array<uint8_t, 4>& value) {
+	subnet = value;
+	eeprom->WriteIP(SUBNET_ID, value);
+}
+void Config::setDNS(const std::array<uint8_t, 4>& value) {
+	dns = value;
+	eeprom->WriteIP(DNS_ID, value);
+}
+void Config::setKeepAliveInterval(uint16_t value) {
+	keep_alive_interval = value;
+}
+void Config::setDHCPEnabled(bool value) {
+	dhcp_enabled = value;
+	eeprom->WriteInt(DHCP_ENABLED_ID, value);
+
+}
 void Config::setIpAssigned(bool value) {ip_assigned = value;}
-void Config::setExtentionEnabled(bool value) {extentionEnabled = value;}
-void Config::setIntervalTime(uint32_t value) { interval_time = value; }
+void Config::setExtentionEnabled(bool value) {
+	extentionEnabled = value;
+	eeprom->WriteInt(EXTENSION_ENABLED_ID, value);
+}
+void Config::setIntervalTime(uint32_t value) {
+	interval_time = value;
+	eeprom->WriteInt(INTERVAL_TIME_ID, value);
+
+}
 
 void Config::setUsername(const std::string& value) { username = value; }
 void Config::setClientId(const std::string& value) { clientId = value; }

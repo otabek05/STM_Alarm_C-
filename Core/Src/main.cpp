@@ -76,6 +76,8 @@ int main(void)
 
   config.init(&eeprom);
 
+  config.setUp();
+
   utils.init(&config, &muxSelect);
 
   ethManager.init(&config, &utils);
@@ -84,33 +86,8 @@ int main(void)
 
   uartHandler.init(&huart1, &utils, &config);
 
-  uint16_t stringKey = 1;
-      uint16_t ipKey = 2;
-      uint16_t intKey = 3;
+  utils.print("It is coming up to here!! \r\n");
 
-      // Write a string
-      std::string helloWorld = "Hello, World!";
-      if(eeprom.WriteString(stringKey, helloWorld)) {
-          // Read and print the string
-          std::string readString = eeprom.ReadString(stringKey);
-          utils.print("Read string: %s\n", readString.c_str());
-      }
-
-      // Write an IP address
-      std::array<uint8_t, 4> ipAddress = {192, 168, 1, 1};
-      if(eeprom.WriteIP(ipKey, ipAddress)) {
-          // Read and print the IP address
-          auto readIp = eeprom.ReadIP(ipKey);
-          utils.print("Read IP: %d.%d.%d.%d\n", readIp[0], readIp[1], readIp[2], readIp[3]);
-      }
-
-      // Write an integer
-      int intValue = 12345;
-      if(eeprom.WriteInt(intKey, intValue)) {
-          // Read and print the integer
-          int readInt = eeprom.ReadInt(intKey);
-          utils.print("Read int: %d\n", readInt);
-      }
   while (true)
 
   {
@@ -121,7 +98,6 @@ int main(void)
 
 	if (uartHandler.getRealTimeData()) {
 		   if (timeValue == 2) {
-
 		    uartHandler.SendRealTimeData(&statusJsonUSARTBuffer);
 		   }
 

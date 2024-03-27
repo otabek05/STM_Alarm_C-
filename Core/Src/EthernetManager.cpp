@@ -187,6 +187,7 @@ bool EthernetManager::configureNetwork() {
 
            config->setDHCPNetworkConfig(&net_info);
        } else {
+    	   config->setIpAssigned(true);
     	   utils->print("STATIC mode has been enabled@ \r\n");
            // Static IP mode
     	   std::memcpy(net_info.ip, config->getIP().data(), 4); // For std::array

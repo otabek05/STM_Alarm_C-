@@ -18,6 +18,28 @@ constexpr size_t MAX_ANALOG_INPUTS = 8;
 constexpr size_t MAX_DIGITAL_INPUTS = 16;
 constexpr size_t MAX_DIGITAL_OUTPUTS = 8;
 
+
+class Key{
+public:
+	std::string Key;
+	uint8_t Val;
+};
+#define BROKER_IP_ID         1
+#define BROKER_PORT_ID       2
+#define IP_ID                3
+#define GATEWAY_ID           4
+#define SUBNET_ID            5
+#define DNS_ID               6
+#define KEEP_ALIVE_ID        7
+#define DHCP_ENABLED_ID      8
+#define EXTENSION_ENABLED_ID 9
+#define INTERVAL_TIME_ID     10
+#define USERNAME_ID          11
+#define CLIENT_ID_ID         12
+#define PASSWORD_ID          13
+#define TOPIC_SUBSCRIBE_ID   14
+#define TOPIC_PUBLISH_ID     15
+#define QOS_ID               16
 class AT24C;
 
 class Config {
@@ -72,6 +94,7 @@ public:
     std::string getDigitalInputName(int index);
     std::string getDigitalOutputName(int index);
     void init(AT24C* eepromInstance);
+    void setUp();
     void initmqttConfig();
     char* getInfoList();
     std::array<uint8_t, 4> extractIPAddress(cJSON* parent, const char* name);
@@ -110,6 +133,8 @@ private:
     std::array<std::string, MAX_ANALOG_INPUTS> analog_input_names;
     std::array<std::string, MAX_DIGITAL_INPUTS> digital_input_names;
     std::array<std::string, MAX_DIGITAL_OUTPUTS> digital_output_names;
+
+
 
 };
 
