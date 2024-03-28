@@ -176,7 +176,7 @@ std::string createStringFromArray8len(std::array<std::string, 8>arr) {
 char* Config::getInfoList(){
 	std::string data = "1";
 	std::string comma = ";";
-	std::array<std::string,11 > lists;
+	std::array<std::string,12 > lists;
 
 
 	lists[0] = getClientId();
@@ -190,6 +190,7 @@ char* Config::getInfoList(){
 	lists[8] = createStringFromArray(getDigitalInputNames());
 	lists[9] = createStringFromArray8len(getDigitalOutputNames());
 	lists[10] = getDHCPEnabled() ? std::to_string(1) : std::to_string(0);
+	lists[11] = std::to_string(getExtentionEnabled());
 	for (size_t i = 0; i < lists.size(); i ++ ) {
 		data += comma;
 		data += lists[i];
