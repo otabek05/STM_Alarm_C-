@@ -74,7 +74,7 @@ int main(void)
 
   muxSelect.init(&hadc1);
 
-  config.init(&eeprom);
+  config.init(&eeprom, &utils);
 
   config.setUp();
 

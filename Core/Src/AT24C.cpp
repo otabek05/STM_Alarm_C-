@@ -9,6 +9,26 @@ AT24C::AT24C(I2C_HandleTypeDef *hi2c) : _hi2c(hi2c) {}
 #include <vector>
 #include <algorithm>
 
+bool AT24C::IsEEPROMInitialized() {
+    uint8_t marker = 0;
+    // Read the marker byte from the EEPROM
+    if (ReadBytes(EEPROM_INIT_MARKER_ADDRESS, &marker, 1) == HAL_OK) {
+        // Check if the marker matches the predefined value
+        return marker == EEPROM_INIT_MARKER_VALUE;
+    }
+    return false; // Assume not initialized if read fails
+}
+
+
+void AT24C::InitializeEEPROM() {
+    // Write the initialization marker to the EEPROM
+    uint8_t marker = EEPROM_INIT_MARKER_VALUE;
+    WriteBytes(EEPROM_INIT_MARKER_ADDRESS, &marker, 1);
+
+    // Here you can add more initialization logic as needed,
+    // such as setting default values for various settings.
+}
+
 
 
 bool AT24C::WriteString(uint16_t key, const std::string &value) {
@@ -37,8 +57,7 @@ bool AT24C::ReadIP(uint16_t key, std::array<uint8_t, 4>& ip) {
         return false; // Failed to read from EEPROM
     }
 
-    // Check if the read IP address is {0, 0, 0, 0}
-    if (ip == std::array<uint8_t, 4>{0, 0, 0, 0}) {
+    if (ip == std::array<uint8_t, 4>{255, 255, 255, 255}) {
         return false; // Considered as "empty"
     }
 
@@ -74,8 +93,9 @@ bool AT24C::WriteDigitalInput(uint16_t key, const std::array<std::string, 16>& s
 }
 
 
+/*
 bool AT24C::ReadDigitalInput(uint16_t key, std::array<std::string, 16>& strings){
-	 std::vector<uint8_t> data(1024); // Assume max total length for the strings
+	 std::vector<uint8_t> data(2048); // Assume max total length for the strings
 	    bool readSuccess = false;
 	    size_t stringIndex = 0;
 
@@ -101,6 +121,37 @@ bool AT24C::ReadDigitalInput(uint16_t key, std::array<std::string, 16>& strings)
 
 	    return readSuccess;
 }
+*/
+
+bool AT24C::ReadDigitalInput(uint16_t key, std::array<std::string, 16>& strings) {
+    std::vector<uint8_t> data(1024); // Assume max total length for the strings
+    if (ReadBytes(CalculateAddress(key), data.data(), data.size()) == HAL_OK) {
+        // Check for uninitialized EEPROM pattern (all bytes 0xFF)
+        if (std::all_of(data.begin(), data.end(), [](uint8_t b) { return b == 0xFF; })) {
+            // Data is uninitialized, handle accordingly
+            return false;
+        }
+
+        std::string currentString;
+        size_t stringIndex = 0;
+        bool isValidUtf8 = true; // You might want to validate UTF-8 sequences
+
+        for (auto byte : data) {
+            if (byte == ';') { // Delimiter found
+                strings[stringIndex++] = currentString;
+                currentString.clear();
+                if (stringIndex == strings.size()) break; // Array is full
+            } else {
+
+                currentString += static_cast<char>(byte);
+            }
+        }
+        return stringIndex == strings.size() && isValidUtf8;
+    }
+
+    return false; // Read failed
+}
+
 
 
 bool AT24C::ReadArrayString(uint16_t key, std::array<std::string, 8 >& strings) {

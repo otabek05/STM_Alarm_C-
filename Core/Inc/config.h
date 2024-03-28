@@ -5,6 +5,7 @@
 #include <string>
 #include <cstdint>
 #include "AT24C.h"
+#include "utils.h"
 
 extern "C" {
 #include "stm32f4xx_hal.h"
@@ -24,22 +25,26 @@ public:
 	std::string Key;
 	uint8_t Val;
 };
+
 #define BROKER_IP_ID         1
 #define BROKER_PORT_ID       2
 #define IP_ID                3
 #define GATEWAY_ID           4
 #define SUBNET_ID            5
 #define DNS_ID               6
-#define DHCP_ENABLED_ID      8
-#define EXTENSION_ENABLED_ID 9
-#define INTERVAL_TIME_ID     10
-#define USERNAME_ID          11
-#define PASSWORD_ID          13
-#define TOPIC_SUBSCRIBE_ID   14
-#define TOPIC_PUBLISH_ID     15
-#define DIGITALNAME_ID             16
-#define ANALOGNAME_ID               17
-#define RELAYNAME_ID                18
+#define DHCP_ENABLED_ID      7  // Changed from 8 to 7
+#define EXTENSION_ENABLED_ID 8  // Changed from 9 to 8
+#define INTERVAL_TIME_ID     9  // Changed from 10 to 9
+#define USERNAME_ID          10 // Changed from 11 to 10
+#define PASSWORD_ID          11 // Changed from 13 to 11
+#define TOPIC_SUBSCRIBE_ID   12 // Changed from 14 to 12
+#define TOPIC_PUBLISH_ID     13 // Changed from 15 to 13
+#define DIGITALNAME_ID       14 // Changed from 16 to 14
+#define ANALOGNAME_ID        15 // Changed from 17 to 15
+#define RELAYNAME_ID         16 // Changed from 18 to 16
+
+
+class Utils;
 
 class AT24C;
 
@@ -48,6 +53,7 @@ public:
     Config();
     // Getters
     AT24C* eeprom;
+    Utils* utils;
     std::array<uint8_t, 4> getBrokerIP() const;
     uint16_t getBrokerPort() const;
     std::array<uint8_t, 4> getIP()const ;
@@ -94,7 +100,7 @@ public:
     std::string getAnalogInputName(int index);
     std::string getDigitalInputName(int index);
     std::string getDigitalOutputName(int index);
-    void init(AT24C* eepromInstance);
+    void init(AT24C* eepromInstance, Utils* utilsInstance);
     void setUp();
     void initmqttConfig();
     char* getInfoList();

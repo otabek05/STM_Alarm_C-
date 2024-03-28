@@ -33,10 +33,21 @@ Core/Src/config.o: ../Core/Src/config.cpp ../Core/Inc/config.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- ../Core/Lib/Ethernet/wizchip_conf.h \
+ ../Core/Inc/utils.h ../Core/Lib/MQTT/MQTTClient.h \
+ ../Core/Lib/MQTT/../../Lib/MQTT/MQTTPacket/src/MQTTPacket.h \
+ ../Core/Lib/MQTT/../../Lib/MQTT/MQTTPacket/src/../../../../Lib/MQTT/MQTTPacket/src/MQTTConnect.h \
+ ../Core/Lib/MQTT/../../Lib/MQTT/MQTTPacket/src/../../../../Lib/MQTT/MQTTPacket/src/MQTTPublish.h \
+ ../Core/Lib/MQTT/../../Lib/MQTT/MQTTPacket/src/../../../../Lib/MQTT/MQTTPacket/src/MQTTSubscribe.h \
+ ../Core/Lib/MQTT/../../Lib/MQTT/MQTTPacket/src/../../../../Lib/MQTT/MQTTPacket/src/MQTTUnsubscribe.h \
+ ../Core/Lib/MQTT/../../Lib/MQTT/MQTTPacket/src/../../../../Lib/MQTT/MQTTPacket/src/MQTTFormat.h \
+ ../Core/Lib/MQTT/../../Lib/MQTT/MQTTPacket/src/../../../../Lib/MQTT/MQTTPacket/src/../../../../Lib/MQTT/MQTTPacket/src/MQTTPacket.h \
+ ../Core/Lib/MQTT/../../Lib/MQTT/MQTTPacket/src/../../../../Lib/MQTT/MQTTPacket/src/../../../../Lib/MQTT/MQTTPacket/src/StackTrace.h \
+ ../Core/Lib/MQTT/../../Lib/MQTT/mqtt_interface.h \
+ ../Core/Lib/MQTT/mqtt_interface.h ../Core/Lib/JSON/cJSON.h \
+ ../Core/Inc/main.h ../Core/Lib/DHCP/dhcp.h ../Core/Inc/config.h \
+ ../Core/Inc/MuxSelect.h ../Core/Lib/Ethernet/wizchip_conf.h \
  ../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/w5500.h \
- ../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/../../../Lib/Ethernet/wizchip_conf.h \
- ../Core/Lib/JSON/cJSON.h
+ ../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/../../../Lib/Ethernet/wizchip_conf.h
 ../Core/Inc/config.h:
 ../Core/Inc/AT24C.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
@@ -73,7 +84,23 @@ Core/Src/config.o: ../Core/Src/config.cpp ../Core/Inc/config.h \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
+../Core/Inc/utils.h:
+../Core/Lib/MQTT/MQTTClient.h:
+../Core/Lib/MQTT/../../Lib/MQTT/MQTTPacket/src/MQTTPacket.h:
+../Core/Lib/MQTT/../../Lib/MQTT/MQTTPacket/src/../../../../Lib/MQTT/MQTTPacket/src/MQTTConnect.h:
+../Core/Lib/MQTT/../../Lib/MQTT/MQTTPacket/src/../../../../Lib/MQTT/MQTTPacket/src/MQTTPublish.h:
+../Core/Lib/MQTT/../../Lib/MQTT/MQTTPacket/src/../../../../Lib/MQTT/MQTTPacket/src/MQTTSubscribe.h:
+../Core/Lib/MQTT/../../Lib/MQTT/MQTTPacket/src/../../../../Lib/MQTT/MQTTPacket/src/MQTTUnsubscribe.h:
+../Core/Lib/MQTT/../../Lib/MQTT/MQTTPacket/src/../../../../Lib/MQTT/MQTTPacket/src/MQTTFormat.h:
+../Core/Lib/MQTT/../../Lib/MQTT/MQTTPacket/src/../../../../Lib/MQTT/MQTTPacket/src/../../../../Lib/MQTT/MQTTPacket/src/MQTTPacket.h:
+../Core/Lib/MQTT/../../Lib/MQTT/MQTTPacket/src/../../../../Lib/MQTT/MQTTPacket/src/../../../../Lib/MQTT/MQTTPacket/src/StackTrace.h:
+../Core/Lib/MQTT/../../Lib/MQTT/mqtt_interface.h:
+../Core/Lib/MQTT/mqtt_interface.h:
+../Core/Lib/JSON/cJSON.h:
+../Core/Inc/main.h:
+../Core/Lib/DHCP/dhcp.h:
+../Core/Inc/config.h:
+../Core/Inc/MuxSelect.h:
 ../Core/Lib/Ethernet/wizchip_conf.h:
 ../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/w5500.h:
 ../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/../../../Lib/Ethernet/wizchip_conf.h:
-../Core/Lib/JSON/cJSON.h:

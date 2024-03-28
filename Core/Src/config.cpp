@@ -30,9 +30,9 @@ Config::Config(){
 
 }
 
-void Config::init(AT24C* eepromInstance) {
+void Config::init(AT24C* eepromInstance,  Utils* utilsInstance) {
 
-
+    utils = utilsInstance;
 	eeprom = eepromInstance;
 
 
@@ -41,10 +41,12 @@ void Config::init(AT24C* eepromInstance) {
 void Config::setUp() {
     static std::array<uint8_t, 4> ipStatic;
 
+   // setBrokerIP(DEFAULT_BROKER_IP);
     setBrokerIP(eeprom->ReadIP(BROKER_IP_ID, ipStatic) ? ipStatic : DEFAULT_BROKER_IP);
+    setBrokerPort(1883);
 
-    uint16_t port = eeprom->ReadInt(BROKER_PORT_ID);
-    setBrokerPort(port ? port : DEFAULT_PORT);
+  //  uint16_t port = eeprom->ReadInt(BROKER_PORT_ID);
+  //  setBrokerPort(port != -1 ? port : DEFAULT_PORT);
 
     int dhcp = eeprom->ReadInt(DHCP_ENABLED_ID);
     setDHCPEnabled(dhcp == -1 ? DEFAULT_DHCP_ENABLED : static_cast<bool>(dhcp));
@@ -72,14 +74,21 @@ void Config::setUp() {
     setTopicPublish("topic/pub");
     setQoS(DEFAULT_QOS);
 
-    std::array<std::string, 8> analog;
-    setAnalogInputNames(eeprom->ReadArrayString(ANALOGNAME_ID, analog) ? analog : DEFAULT_ANALOG_INPUT_NAMES);
+    if (eeprom->IsEEPROMInitialized()) {
+    	 std::array<std::string, MAX_DIGITAL_INPUTS> digital_input;
+    	 setDigitalInputNames(eeprom->ReadDigitalInput(DIGITALNAME_ID, digital_input) ? digital_input : DEFAULT_DIGITAL_INPUT_NAMES);
 
-    std::array<std::string, 8 > relay;
-    setDigitalOutputNames(eeprom->ReadArrayString(RELAYNAME_ID, relay) ? relay : DEFAULT_DIGITAL_OUTPUT_NAMES);
+    	 std::array<std::string, 8 > relay;
+    	 setDigitalOutputNames(eeprom->ReadArrayString(RELAYNAME_ID, relay) ? relay : DEFAULT_DIGITAL_OUTPUT_NAMES);
 
-    std::array<std::string, MAX_DIGITAL_INPUTS> digital_input;
-    setDigitalInputNames(eeprom->ReadDigitalInput(DIGITALNAME_ID, digital_input) ? digital_input : DEFAULT_DIGITAL_INPUT_NAMES);
+    	 std::array<std::string, 8> analog;
+    	 setAnalogInputNames(eeprom->ReadArrayString(ANALOGNAME_ID, analog) ? analog : DEFAULT_ANALOG_INPUT_NAMES);
+    }else {
+    	    eeprom->InitializeEEPROM();
+    	    setAnalogInputNames(DEFAULT_ANALOG_INPUT_NAMES);
+    	    setDigitalInputNames(DEFAULT_DIGITAL_INPUT_NAMES);
+    	    setDigitalOutputNames(DEFAULT_DIGITAL_OUTPUT_NAMES);
+    }
 
 }
 
@@ -431,15 +440,38 @@ void Config::setTopicSubscribe(const std::string& value) { topic_subscribe = val
 void Config::setTopicPublish(const std::string& value) { topic_publish = value; }
 void Config::setQoS(int value) { qos = value; }
 void Config::setAnalogInputNames(const std::array<std::string, MAX_ANALOG_INPUTS>& value) {
-	eeprom->WriteArrayString(ANALOGNAME_ID, value);
-	analog_input_names = value;
+    bool isEmpty = false;
+    for (const auto& element :value){
+    	if (element.empty()){
+    		isEmpty = true;
+    	}
+    }
+    if (!isEmpty) {
+    	eeprom->WriteArrayString(ANALOGNAME_ID, value);
+        analog_input_names = value;
+        utils->playSound();
+    }
+
 
 }
 void Config::setDigitalInputNames(const std::array<std::string, MAX_DIGITAL_INPUTS>& value) {
+	bool isEmpty = false;
+	for (const auto& element : value) {
+	 if (element.empty()) isEmpty = true;
+	}
+	if (isEmpty) return;
+
 	digital_input_names = value;
 	eeprom->WriteDigitalInput(DIGITALNAME_ID, value);
+	utils->playSound();
 }
 void Config::setDigitalOutputNames(const std::array<std::string, MAX_DIGITAL_OUTPUTS>& value) {
+	bool isEmpty = false;
+	for (const auto& element: value){
+		if(element.empty()) isEmpty = true;
+	}
+	if(isEmpty) return;
 	digital_output_names = value;
     eeprom->WriteArrayString(RELAYNAME_ID, value);
+    utils->playSound();
 }

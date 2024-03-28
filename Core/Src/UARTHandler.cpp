@@ -101,19 +101,19 @@ void UARTHandler::processReceivedData() {
                     break;
                 }
                 case ANALOG_NAME: {
-                	utils->playSound();
+
                 	config->setAnalogInputNamesFromJson(json);
                 //    utils->print("Analog Names has been arrived!!! \r\n");
                     break;
                 }
                 case DIGITAL_NAME: {
-                	utils->playSound();
+
                 	config->setDigitalInputNamesFromJson(json);
             //    	utils->print("Digital Names has been arrived!!! \r\n");
                 	break;
                 }
                 case RELAY_NAME: {
-                	utils->playSound();
+
                 	config->setRelayNamesFromJson(json);
             //    	utils->print("Relay Names has been arrived!!! \r\n");
                 	break;

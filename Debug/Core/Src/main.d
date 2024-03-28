@@ -44,13 +44,13 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
  ../Core/Lib/MQTT/../../Lib/MQTT/MQTTPacket/src/../../../../Lib/MQTT/MQTTPacket/src/../../../../Lib/MQTT/MQTTPacket/src/StackTrace.h \
  ../Core/Lib/MQTT/../../Lib/MQTT/mqtt_interface.h \
  ../Core/Lib/MQTT/mqtt_interface.h ../Core/Lib/DHCP/dhcp.h \
- ../Core/Inc/config.h ../Core/Inc/AT24C.h \
- ../Core/Lib/Ethernet/wizchip_conf.h \
+ ../Core/Inc/config.h ../Core/Inc/AT24C.h ../Core/Inc/utils.h \
+ ../Core/Lib/JSON/cJSON.h ../Core/Inc/main.h ../Core/Inc/config.h \
+ ../Core/Inc/MuxSelect.h ../Core/Lib/Ethernet/wizchip_conf.h \
  ../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/w5500.h \
  ../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/../../../Lib/Ethernet/wizchip_conf.h \
- ../Core/Lib/JSON/cJSON.h ../Core/Inc/mqtt_init.h ../Core/Inc/utils.h \
- ../Core/Inc/main.h ../Core/Inc/config.h ../Core/Inc/MuxSelect.h \
- ../Core/Inc/utils.h ../Core/Inc/EthernetManager.h ../Core/Lib/DNS/dns.h \
+ ../Core/Inc/mqtt_init.h ../Core/Inc/utils.h \
+ ../Core/Inc/EthernetManager.h ../Core/Lib/DNS/dns.h \
  ../Core/Lib/Ethernet/socket.h \
  ../Core/Lib/Ethernet/../../Lib/Ethernet/wizchip_conf.h \
  ../Core/Inc/CircularBuffer.h ../Core/Inc/UARTHandler.h \
@@ -104,15 +104,15 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
 ../Core/Lib/DHCP/dhcp.h:
 ../Core/Inc/config.h:
 ../Core/Inc/AT24C.h:
-../Core/Lib/Ethernet/wizchip_conf.h:
-../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/w5500.h:
-../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/../../../Lib/Ethernet/wizchip_conf.h:
-../Core/Lib/JSON/cJSON.h:
-../Core/Inc/mqtt_init.h:
 ../Core/Inc/utils.h:
+../Core/Lib/JSON/cJSON.h:
 ../Core/Inc/main.h:
 ../Core/Inc/config.h:
 ../Core/Inc/MuxSelect.h:
+../Core/Lib/Ethernet/wizchip_conf.h:
+../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/w5500.h:
+../Core/Lib/Ethernet/../../Lib/Ethernet/W5500/../../../Lib/Ethernet/wizchip_conf.h:
+../Core/Inc/mqtt_init.h:
 ../Core/Inc/utils.h:
 ../Core/Inc/EthernetManager.h:
 ../Core/Lib/DNS/dns.h:

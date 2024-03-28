@@ -20,6 +20,9 @@ void MQTTConnection::init(Config* configInstance, Utils * utilInstance) {
 }
 
 bool MQTTConnection::connect() {
+	std::array<uint8_t, 4> broker = config->getBrokerIP();
+	utils->print("%d: %d: %d: %d: \r\n", broker[0], broker[1], broker[2], broker[3]);
+	utils->print("%d: \r\n", config->getBrokerPort());
 	NewNetwork(&network, 1);
 	ConnectNetwork(&network, config->getBrokerIP().data(), config->getBrokerPort());
     MQTTClientInit(&mqttClient, &network, 1000,send_buffer , sizeof(send_buffer), recieve_buff, sizeof(recieve_buff));
@@ -132,18 +135,18 @@ void MQTTConnection::handleIncomingMessage(MessageData* data) {
 	    switch (type){
 	    case 1:
 	    	config->setAnalogInputNamesFromJson(json);
-	    	utils->playSound();
+
 	    	utils->print("Analog names has been changed! \r\n");
 	    	break;
 	    case 2:
 	    	config->setDigitalInputNamesFromJson(json);
 	    	utils->print("Digital Input Names has been changed! \r\n");
-	    	utils->playSound();
+
 	    	break;
 	    case 3:
 	    	config->setRelayNamesFromJson(json);
 	    	utils->print("Relay Names has been changed!! \r\n");
-	    	utils->playSound();
+
 	    	break;
 	    case 4: {
 	            const cJSON *number = cJSON_GetObjectItemCaseSensitive(json, "number");
